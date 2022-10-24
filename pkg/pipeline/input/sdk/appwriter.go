@@ -386,6 +386,7 @@ func (w *appWriter) push(packets []*rtp.Packet, blankFrame bool) error {
 			return err
 		}
 
+		//NewBufferFromBytes returns a new buffer from the given byte slice.
 		b := gst.NewBufferFromBytes(p)
 
 		// RTP packet timestamps start at a random number, and increase according to clock rate (for example, with a

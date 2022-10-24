@@ -24,6 +24,7 @@ const (
 	EgressTypeWebsocket     EgressType = "websocket"
 	EgressTypeFile          EgressType = "file"
 	EgressTypeSegmentedFile EgressType = "segments"
+	EgressTypeFileStream    EgressType = "fileandstream" // adding our new type
 
 	// output types
 	OutputTypeRaw  OutputType = "audio/x-raw"
@@ -34,6 +35,7 @@ const (
 	OutputTypeWebM OutputType = "video/webm"
 	OutputTypeRTMP OutputType = "rtmp"
 	OutputTypeHLS  OutputType = "application/x-mpegurl"
+	OutputTypeFS   OutputType = "custom" //adding our new output type
 
 	// file extensions
 	FileExtensionRaw  = ".raw"

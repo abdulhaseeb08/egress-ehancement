@@ -59,6 +59,15 @@ func BuildAudioEncoder(p *params.Params) ([]*gst.Element, error) {
 	// 	return nil, err
 	// }
 
+	// adding tee as our last element when the output type is file + stream
+	if p.OutputType == params.OutputTypeFS {
+		tee, err := gst.NewElement("tee")
+		if err != nil {
+			return nil, err
+		}
+		return []*gst.Element{audioConvert, audioResample, audioCapsFilter, encoder, tee}, nil
+	}
+
 	return []*gst.Element{audioConvert, audioResample, audioCapsFilter, encoder}, nil
 }
 
@@ -104,6 +113,15 @@ func BuildVideoEncoder(p *params.Params) ([]*gst.Element, error) {
 		// 	return nil, err
 		// }
 
+		// adding tee as our last element when the output type is file + stream
+		if p.OutputType == params.OutputTypeFS {
+			tee, err := gst.NewElement("tee")
+			if err != nil {
+				return nil, err
+			}
+			return []*gst.Element{x264Enc, encodedCaps, tee}, nil
+		}
+
 		return []*gst.Element{x264Enc, encodedCaps}, nil
 
 	default:
@@ -128,57 +146,99 @@ func BuildQueue() (*gst.Element, error) {
 	return queue, nil
 }
 
-func BuildMux(p *params.Params) (*gst.Element, error) {
+//Made changes in the BuildMux function.
+func BuildMux(p *params.Params) ([]*gst.Element, error) {
 	switch p.OutputType {
 	case params.OutputTypeRaw:
 		return nil, nil
 
 	case params.OutputTypeOGG:
-		return gst.NewElement("oggmux")
+		oggmux, err := gst.NewElement("oggmux")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{oggmux}, nil
+		}
 
 	case params.OutputTypeIVF:
-		return gst.NewElement("avmux_ivf")
+		avmux, err := gst.NewElement("avmux_ivf")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{avmux}, nil
+		}
 
 	case params.OutputTypeMP4:
-		return gst.NewElement("mp4mux")
+		mp4mux, err := gst.NewElement("mp4mux")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{mp4mux}, nil
+		}
 
 	case params.OutputTypeTS:
-		return gst.NewElement("mpegtsmux")
+		mpegtsmux, err := gst.NewElement("mpegtsmux")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{mpegtsmux}, nil
+		}
 
 	case params.OutputTypeWebM:
-		return gst.NewElement("webmmux")
+		webmmux, err := gst.NewElement("webmmux")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{webmmux}, nil
+		}
 
 	case params.OutputTypeRTMP:
-		mux, err := gst.NewElement("flvmux")
+		flvmux, err := gst.NewElement("flvmux")
 		if err != nil {
 			return nil, err
 		}
-		if err = mux.SetProperty("streamable", true); err != nil {
+		if err = flvmux.SetProperty("streamable", true); err != nil {
 			return nil, err
 		}
 		// if err = mux.SetProperty("latency", uint64(200000000)); err != nil {
 		// 	return nil, err
 		// }
-		return mux, nil
+		return []*gst.Element{flvmux}, nil
 
 	case params.OutputTypeHLS:
-		mux, err := gst.NewElement("splitmuxsink")
+		splitmuxsink, err := gst.NewElement("splitmuxsink")
 		if err != nil {
 			return nil, err
 		}
-		if err = mux.SetProperty("max-size-time", uint64(time.Duration(p.SegmentDuration)*time.Second)); err != nil {
+		if err = splitmuxsink.SetProperty("max-size-time", uint64(time.Duration(p.SegmentDuration)*time.Second)); err != nil {
 			return nil, err
 		}
-		if err = mux.SetProperty("async-finalize", true); err != nil {
+		if err = splitmuxsink.SetProperty("async-finalize", true); err != nil {
 			return nil, err
 		}
-		if err = mux.SetProperty("muxer-factory", "mpegtsmux"); err != nil {
+		if err = splitmuxsink.SetProperty("muxer-factory", "mpegtsmux"); err != nil {
 			return nil, err
 		}
-		if err = mux.SetProperty("location", fmt.Sprintf("%s_%%05d.ts", p.LocalFilePrefix)); err != nil {
+		if err = splitmuxsink.SetProperty("location", fmt.Sprintf("%s_%%05d.ts", p.LocalFilePrefix)); err != nil {
 			return nil, err
 		}
-		return mux, nil
+		return []*gst.Element{splitmuxsink}, nil
+
+	// two muxes for our custom type
+	case params.OutputTypeFS:
+		flvmux, err := gst.NewElement("flvmux")
+		if err != nil {
+			return nil, err
+		}
+		if err = flvmux.SetProperty("streamable", true); err != nil {
+			return nil, err
+		}
+		mp4mux, err := gst.NewElement("mp4mux")
+		if err != nil {
+			return nil, err
+		} else {
+			return []*gst.Element{flvmux, mp4mux}, nil
+		}
 
 	default:
 		return nil, errors.ErrInvalidInput("output type")

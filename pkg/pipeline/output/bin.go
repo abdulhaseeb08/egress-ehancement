@@ -41,6 +41,8 @@ func New(ctx context.Context, p *params.Params) (*OutputBin, error) {
 		return buildStreamOutputBin(p)
 	case params.EgressTypeWebsocket:
 		return buildWebsocketOutputBin(p)
+	case params.EgressTypeFileStream: // a new case for our new type
+		return buildFileStreamOutputBin(p)
 	case params.EgressTypeSegmentedFile:
 		// In the case of segmented output, the muxer and the sink are embedded in the same object
 		return nil, nil

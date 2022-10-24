@@ -33,7 +33,9 @@ func buildAudioElements(src *app.Source, codec webrtc.RTPCodecParameters, p *par
 		return nil, nil
 	}
 
-	src.Element.SetArg("format", "time")
+	src.Element.SetArg("format", "time") //time in ns
+
+	//Instruct the source to behave like a live source. This includes that it will only push out buffers in the PLAYING state.
 	if err := src.Element.SetProperty("is-live", true); err != nil {
 		return nil, err
 	}
