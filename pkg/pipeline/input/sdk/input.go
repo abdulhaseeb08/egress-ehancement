@@ -9,7 +9,7 @@ import (
 	"github.com/tinyzimmer/go-gst/gst/app"
 	"go.uber.org/atomic"
 
-	"github.com/livekit/egress/pkg/pipeline/input/bin"
+	"github.com/livekit/egress/pkg/pipeline/input/builder"
 	"github.com/livekit/egress/pkg/pipeline/params"
 	"github.com/livekit/protocol/logger"
 	"github.com/livekit/protocol/tracer"
@@ -24,11 +24,10 @@ const (
 )
 
 type SDKInput struct {
-	*bin.InputBin
+	*builder.InputBin
 
 	room   *lksdk.Room
 	logger logger.Logger
-	active atomic.Int32
 	cs     *synchronizer
 
 	// track
@@ -55,6 +54,7 @@ type SDKInput struct {
 	videoPlaying     chan struct{}
 	videoParticipant string
 
+	active       atomic.Int32
 	mutedChan    chan bool
 	endRecording chan struct{}
 }
@@ -74,9 +74,11 @@ func NewSDKInput(ctx context.Context, p *params.Params) (*SDKInput, error) {
 		return nil, err
 	}
 
-	if err := s.build(ctx, p); err != nil {
+	input, err := builder.NewSDKInput(ctx, p, s.audioSrc, s.videoSrc, s.audioCodec, s.videoCodec)
+	if err != nil {
 		return nil, err
 	}
+	s.InputBin = input
 
 	return s, nil
 }
