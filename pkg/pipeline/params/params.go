@@ -35,6 +35,7 @@ type Params struct {
 	MutedChan chan bool
 	StreamParams
 	FileParams
+	FileAndStreamParams
 	SegmentedFileParams
 
 	UploadParams
@@ -88,6 +89,19 @@ type FileParams struct {
 	FileInfo        *livekit.FileInfo
 	LocalFilepath   string
 	StorageFilepath string
+}
+
+//defining a new struct
+type FileAndStreamParams struct {
+	//for rtmp
+	WebsocketUrlFS string
+	StreamUrlsFS   []string
+	StreamInfoFS   map[string]*livekit.StreamInfo
+
+	//for file
+	FileInfoFS        *livekit.FileInfo
+	LocalFilepathFS   string
+	StorageFilepathFS string
 }
 
 type SegmentedFileParams struct {

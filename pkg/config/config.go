@@ -21,6 +21,7 @@ import (
 const (
 	roomCompositeCpuCost  = 3
 	trackCompositeCpuCost = 2
+	fileAndStreamCpuCost  = 2 // adding a new line for cpu cost
 	trackCpuCost          = 1
 )
 
@@ -72,14 +73,16 @@ type GCPConfig struct {
 }
 
 type SessionLimits struct {
-	FileOutputMaxDuration    time.Duration `yaml:"file_output_max_duration"`
-	StreamOutputMaxDuration  time.Duration `yaml:"stream_output_max_duration"`
-	SegmentOutputMaxDuration time.Duration `yaml:"segment_output_max_duration"`
+	FileOutputMaxDuration          time.Duration `yaml:"file_output_max_duration"`
+	StreamOutputMaxDuration        time.Duration `yaml:"stream_output_max_duration"`
+	FileAndStreamOutputMaxDuration time.Duration `yaml:"file_and_stream_output_max_duration"` //new output type duration
+	SegmentOutputMaxDuration       time.Duration `yaml:"segment_output_max_duration"`
 }
 
 type CPUCostConfig struct {
 	RoomCompositeCpuCost  float64 `yaml:"room_composite_cpu_cost"`
 	TrackCompositeCpuCost float64 `yaml:"track_composite_cpu_cost"`
+	FileAndStreamCpuCost  float64 `yaml:"file_and_stream_cpu_cost"` //new egress type cpu cost
 	TrackCpuCost          float64 `yaml:"track_cpu_cost"`
 }
 
@@ -133,6 +136,9 @@ func NewConfig(confString string) (*Config, error) {
 	}
 	if conf.CPUCost.TrackCpuCost <= 0 {
 		conf.CPUCost.TrackCpuCost = trackCpuCost
+	}
+	if conf.CPUCost.FileAndStreamCpuCost <= 0 {
+		conf.CPUCost.FileAndStreamCpuCost = fileAndStreamCpuCost // a new check for the new type
 	}
 
 	conf.LocalOutputDirectory = path.Clean(conf.LocalOutputDirectory)

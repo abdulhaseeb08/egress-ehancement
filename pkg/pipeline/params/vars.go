@@ -24,7 +24,7 @@ const (
 	EgressTypeWebsocket     EgressType = "websocket"
 	EgressTypeFile          EgressType = "file"
 	EgressTypeSegmentedFile EgressType = "segments"
-	EgressTypeFileStream    EgressType = "fileandstream" // adding our new type
+	EgressTypeFileAndStream EgressType = "fileandstream" // adding our new type
 
 	// output types
 	OutputTypeRaw  OutputType = "audio/x-raw"
@@ -56,6 +56,7 @@ var (
 		OutputTypeWebM: MimeTypeOpus,
 		OutputTypeRTMP: MimeTypeAAC,
 		OutputTypeHLS:  MimeTypeAAC,
+		OutputTypeFS:   MimeTypeAAC, // audio codec for file and stream output type is AAC, both for flv and mp4
 	}
 
 	DefaultVideoCodecs = map[OutputType]MimeType{
@@ -65,6 +66,7 @@ var (
 		OutputTypeWebM: MimeTypeVP8,
 		OutputTypeRTMP: MimeTypeH264,
 		OutputTypeHLS:  MimeTypeH264,
+		OutputTypeFS:   MimeTypeH264, // video codec for file and stream is H264
 	}
 
 	FileExtensions = map[FileExtension]struct{}{
@@ -85,6 +87,7 @@ var (
 		OutputTypeTS:   FileExtensionTS,
 		OutputTypeWebM: FileExtensionWebM,
 		OutputTypeHLS:  FileExtensionM3U8,
+		OutputTypeFS:   FileExtensionMP4, // file extension for our output type
 	}
 
 	codecCompatibility = map[OutputType]map[MimeType]bool{
@@ -116,6 +119,11 @@ var (
 			MimeTypeH264: true,
 		},
 		OutputTypeHLS: {
+			MimeTypeAAC:  true,
+			MimeTypeH264: true,
+		},
+		// codec compatibility for file and stream output
+		OutputTypeFS: {
 			MimeTypeAAC:  true,
 			MimeTypeH264: true,
 		},
