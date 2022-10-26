@@ -267,6 +267,8 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 				return
 			}
 
+			//add fourth case here called *livekit.TrackCompositeEgressRequest_FileAndStream
+
 		default:
 			err = errors.ErrInvalidInput("output")
 			return
