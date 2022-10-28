@@ -92,7 +92,14 @@ type FileParams struct {
 	StorageFilepath string
 }
 
-//defining a new struct
+type SegmentedFileParams struct {
+	SegmentsInfo      *livekit.SegmentsInfo
+	LocalFilePrefix   string
+	StoragePathPrefix string
+	PlaylistFilename  string
+	SegmentDuration   int
+}
+
 type FileAndStreamParams struct {
 	//for rtmp
 	WebsocketUrlFS string
@@ -103,14 +110,6 @@ type FileAndStreamParams struct {
 	FileInfoFS        *livekit.FileInfo
 	LocalFilepathFS   string
 	StorageFilepathFS string
-}
-
-type SegmentedFileParams struct {
-	SegmentsInfo      *livekit.SegmentsInfo
-	LocalFilePrefix   string
-	StoragePathPrefix string
-	PlaylistFilename  string
-	SegmentDuration   int
 }
 
 type UploadParams struct {
@@ -319,8 +318,6 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 			if err = p.updateSegmentsParams(o.Segments.FilenamePrefix, o.Segments.PlaylistName, o.Segments.SegmentDuration, o.Segments.Output); err != nil {
 				return
 			}
-
-			//add fourth case here called *livekit.TrackCompositeEgressRequest_FileAndStream
 
 		default:
 			err = errors.ErrInvalidInput("output")
@@ -665,6 +662,20 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 
 	p.Info.Result = &livekit.EgressInfo_Stream{Stream: &livekit.StreamInfoList{Info: streamInfoList}}
 	return nil
+}
+
+func (p *Params) getFilenameInfo() (string, map[string]string) {
+	if p.Info.RoomName != "" {
+		return p.Info.RoomName, map[string]string{
+			"{room_name}": p.Info.RoomName,
+			"{room_id}":   p.Info.RoomId,
+			"{time}":      time.Now().Format("2006-01-02T150405"),
+		}
+	}
+
+	return "web", map[string]string{
+		"{time}": time.Now().Format("2006-01-02T150405"),
+	}
 }
 
 func (p *Params) updateConnectionInfo(request *livekit.StartEgressRequest) error {
