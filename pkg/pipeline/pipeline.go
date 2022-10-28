@@ -130,10 +130,7 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 
 			srcPadflv.Link(sinkPadrtmp)
 			srcPadmp4.Link(sinkPadfile)
-		}
-
-		// link bins
-		if err = in.Bin().Link(out.Element()); err != nil {
+		} else if err = in.Bin().Link(out.Element()); err != nil {
 			return nil, err
 		}
 	}
