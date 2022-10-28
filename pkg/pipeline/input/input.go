@@ -24,7 +24,8 @@ type Input interface {
 
 func New(ctx context.Context, conf *config.Config, p *params.Params) (Input, error) {
 	switch p.Info.Request.(type) {
-	case *livekit.EgressInfo_RoomComposite:
+	case *livekit.EgressInfo_RoomComposite,
+		*livekit.EgressInfo_Web:
 		return web.NewWebInput(ctx, conf, p)
 
 	//only concerned with track composite

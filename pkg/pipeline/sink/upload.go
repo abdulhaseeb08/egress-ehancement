@@ -72,7 +72,8 @@ func UploadS3(conf *livekit.S3Upload, localFilepath, storageFilepath string, mim
 func convertS3Metadata(metadata map[string]string) map[string]*string {
 	var result = map[string]*string{}
 	for k, v := range metadata {
-		result[k] = &v
+		val := v
+		result[k] = &val
 	}
 	return result
 }
@@ -145,7 +146,7 @@ func UploadGCP(conf *livekit.GCPUpload, localFilepath, storageFilepath string, m
 
 	// In case where the total amount of data to upload is larger than googleapi.DefaultUploadChunkSize, each upload request will have a timeout of
 	// ChunkRetryDeadline, which is 32s by default. If the request payload is smaller than googleapi.DefaultUploadChunkSize, use a context deadline
-	// to apply the same timeouit
+	// to apply the same timeout
 	fileInfo, err := file.Stat()
 	if err != nil {
 		return "", err

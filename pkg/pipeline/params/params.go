@@ -51,6 +51,7 @@ type SourceParams struct {
 	Display    string
 	Layout     string
 	CustomBase string
+	WebUrl     string
 
 	// sdk source
 	TrackID             string
@@ -217,6 +218,58 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 			return
 		}
 
+	case *livekit.StartEgressRequest_Web:
+		p.Info.Request = &livekit.EgressInfo_Web{Web: req.Web}
+
+		// input params
+		p.WebUrl = req.Web.Url
+		if p.WebUrl == "" {
+			err = errors.ErrInvalidInput("url")
+			return
+		}
+		p.Display = fmt.Sprintf(":%d", 10+rand.Intn(2147483637))
+		p.AudioEnabled = !req.Web.VideoOnly
+		p.VideoEnabled = !req.Web.AudioOnly
+		if !p.AudioEnabled && !p.VideoEnabled {
+			err = errors.ErrInvalidInput("AudioOnly and VideoOnly")
+			return
+		}
+
+		// encoding options
+		switch opts := req.Web.Options.(type) {
+		case *livekit.WebEgressRequest_Preset:
+			p.applyPreset(opts.Preset)
+
+		case *livekit.WebEgressRequest_Advanced:
+			p.applyAdvanced(opts.Advanced)
+		}
+
+		// output params
+		switch o := req.Web.Output.(type) {
+		case *livekit.WebEgressRequest_File:
+			p.DisableManifest = o.File.DisableManifest
+			p.updateOutputType(o.File.FileType)
+			if err = p.updateFileParams(o.File.Filepath, o.File.Output); err != nil {
+				return
+			}
+
+		case *livekit.WebEgressRequest_Stream:
+			if err = p.updateStreamParams(OutputTypeRTMP, o.Stream.Urls); err != nil {
+				return
+			}
+
+		case *livekit.WebEgressRequest_Segments:
+			p.DisableManifest = o.Segments.DisableManifest
+			p.updateOutputType(o.Segments.Protocol)
+			if err = p.updateSegmentsParams(o.Segments.FilenamePrefix, o.Segments.PlaylistName, o.Segments.SegmentDuration, o.Segments.Output); err != nil {
+				return
+			}
+
+		default:
+			err = errors.ErrInvalidInput("output")
+			return
+		}
+
 	case *livekit.StartEgressRequest_TrackComposite:
 		p.Info.Request = &livekit.EgressInfo_TrackComposite{TrackComposite: req.TrackComposite}
 		p.Info.RoomName = req.TrackComposite.RoomName
@@ -310,8 +363,10 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 		return
 	}
 
-	if err = p.updateConnectionInfo(request); err != nil {
-		return
+	if p.Info.RoomName != "" {
+		if err = p.updateConnectionInfo(request); err != nil {
+			return
+		}
 	}
 
 	if p.OutputType != "" {
@@ -461,13 +516,9 @@ func (p *Params) updateFileParams(storageFilepath string, output interface{}) er
 	}
 
 	// filename
-	replacements := map[string]string{
-		"{room_name}": p.Info.RoomName,
-		"{room_id}":   p.Info.RoomId,
-		"{time}":      time.Now().Format("2006-01-02T150405"),
-	}
+	identifier, replacements := p.getFilenameInfo()
 	if p.OutputType != "" {
-		err := p.updateFilepath(p.Info.RoomName, replacements)
+		err := p.updateFilepath(identifier, replacements)
 		if err != nil {
 			return err
 		}
@@ -535,15 +586,84 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 	}
 
 	// filename
-	err := p.UpdatePrefixAndPlaylist(p.Info.RoomName, map[string]string{
-		"{room_name}": p.Info.RoomName,
-		"{room_id}":   p.Info.RoomId,
-		"{time}":      time.Now().Format("2006-01-02T150405"),
-	})
+	identifier, replacements := p.getFilenameInfo()
+	err := p.UpdatePrefixAndPlaylist(identifier, replacements)
 	if err != nil {
 		return err
 	}
 
+	return nil
+}
+
+//TODO: have to update this function after changing the protobuf filesss
+func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string, storageFilepath string, output interface{}) error {
+	p.EgressType = EgressTypeFileAndStream
+	p.StorageFilepath = storageFilepath
+	p.FileInfo = &livekit.FileInfo{}
+	p.Info.Result = &livekit.EgressInfo_File{File: p.FileInfo}
+
+	// output location
+	switch o := output.(type) {
+	case *livekit.EncodedFileOutput_S3:
+		p.UploadConfig = o.S3
+	case *livekit.EncodedFileOutput_Azure:
+		p.UploadConfig = o.Azure
+	case *livekit.EncodedFileOutput_Gcp:
+		p.UploadConfig = o.Gcp
+	case *livekit.DirectFileOutput_S3:
+		p.UploadConfig = o.S3
+	case *livekit.DirectFileOutput_Azure:
+		p.UploadConfig = o.Azure
+	case *livekit.DirectFileOutput_Gcp:
+		p.UploadConfig = o.Gcp
+	default:
+		p.UploadConfig = p.conf.FileUpload
+	}
+
+	// filename
+	replacements := map[string]string{
+		"{room_name}": p.Info.RoomName,
+		"{room_id}":   p.Info.RoomId,
+		"{time}":      time.Now().Format("2006-01-02T150405"),
+	}
+	if p.OutputType != "" {
+		err := p.updateFilepath(p.Info.RoomName, replacements)
+		if err != nil {
+			return err
+		}
+	} else {
+		p.StorageFilepath = stringReplace(p.StorageFilepath, replacements)
+	}
+
+	p.OutputType = outputType
+
+	switch p.OutputType {
+	case OutputTypeRTMP:
+		p.EgressType = EgressTypeStream
+		p.AudioCodec = MimeTypeAAC
+		p.VideoCodec = MimeTypeH264
+		p.StreamUrls = urls
+
+	case OutputTypeRaw:
+		p.EgressType = EgressTypeWebsocket
+		p.AudioCodec = MimeTypeRaw
+		p.WebsocketUrl = urls[0]
+		p.MutedChan = make(chan bool, 1)
+	}
+
+	p.StreamInfo = make(map[string]*livekit.StreamInfo)
+	var streamInfoList []*livekit.StreamInfo
+	for _, url := range urls {
+		if err := p.VerifyUrl(url); err != nil {
+			return err
+		}
+
+		info := &livekit.StreamInfo{Url: url}
+		p.StreamInfo[url] = info
+		streamInfoList = append(streamInfoList, info)
+	}
+
+	p.Info.Result = &livekit.EgressInfo_Stream{Stream: &livekit.StreamInfoList{Info: streamInfoList}}
 	return nil
 }
 
@@ -847,6 +967,7 @@ type Manifest struct {
 	EgressID          string `json:"egress_id,omitempty"`
 	RoomID            string `json:"room_id,omitempty"`
 	RoomName          string `json:"room_name,omitempty"`
+	Url               string `json:"url,omitempty"`
 	StartedAt         int64  `json:"started_at,omitempty"`
 	EndedAt           int64  `json:"ended_at,omitempty"`
 	PublisherIdentity string `json:"publisher_identity,omitempty"`
@@ -863,6 +984,7 @@ func (p *Params) GetManifest() ([]byte, error) {
 		EgressID:          p.Info.EgressId,
 		RoomID:            p.Info.RoomId,
 		RoomName:          p.Info.RoomName,
+		Url:               p.WebUrl,
 		StartedAt:         p.Info.StartedAt,
 		EndedAt:           p.Info.EndedAt,
 		PublisherIdentity: p.ParticipantIdentity,
