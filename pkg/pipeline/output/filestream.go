@@ -12,7 +12,7 @@ import (
 func buildFileStreamOutputBin(p *params.Params) (*OutputBin, error) {
 
 	//we first need to link the audio and video pipelines to their respective tees, those tees need to be connected to the muxers,
-	//and then those muxers need to be connected with the output bin, our output bin will have two sink ghost pads.
+	//and then those muxers need to be connected with the output bin, our output bin will have two sink ghost pads in case of file and stream.
 
 	//filesink for file output
 	filesink, err := gst.NewElement("filesink")
@@ -59,8 +59,8 @@ func buildFileStreamOutputBin(p *params.Params) (*OutputBin, error) {
 	}
 
 	// adding the ghost pads
-	ghostPadRtmp := gst.NewGhostPad("sink", tee.GetStaticPad("sink"))
-	ghostPadFile := gst.NewGhostPad("sink", filesink.GetStaticPad("sink"))
+	ghostPadRtmp := gst.NewGhostPad("rtmpsink", tee.GetStaticPad("sink"))
+	ghostPadFile := gst.NewGhostPad("mp4sink", filesink.GetStaticPad("sink"))
 	if !bin.AddPad(ghostPadRtmp.Pad) {
 		return nil, errors.ErrGhostPadFailed
 	}

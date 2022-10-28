@@ -40,6 +40,11 @@ func NewSDKVideoInput(p *params.Params, src *app.Source, codec webrtc.RTPCodecPa
 	if err := v.buildEncoder(p); err != nil {
 		return nil, err
 	}
+	if p.OutputType == params.OutputTypeFS { // a new if statement to build tee element in case of file and stream output
+		if err := v.buildTee(p); err != nil {
+			return nil, err
+		}
+	}
 
 	return v, nil
 }
@@ -238,4 +243,14 @@ func (v *VideoInput) buildEncoder(p *params.Params) error {
 	default:
 		return errors.ErrNotSupported(fmt.Sprintf("%s encoding", p.VideoCodec))
 	}
+}
+
+// buildTee function definiton
+func (v *VideoInput) buildTee(p *params.Params) error {
+	tee, err := gst.NewElement("tee")
+	if err != nil {
+		return err
+	}
+	v.elements = append(v.elements, tee)
+	return nil
 }

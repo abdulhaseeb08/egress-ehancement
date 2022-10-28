@@ -18,6 +18,7 @@ type AudioInput struct {
 	testSrc []*gst.Element
 	mixer   []*gst.Element
 	encoder *gst.Element
+	tee     *gst.Element //we will only create the tee element in case of file and stream output
 }
 
 func NewWebAudioInput(p *params.Params) (*AudioInput, error) {
@@ -48,6 +49,11 @@ func NewSDKAudioInput(p *params.Params, src *app.Source, codec webrtc.RTPCodecPa
 	if err := a.buildEncoder(p); err != nil {
 		return nil, err
 	}
+	if p.OutputType == params.OutputTypeFS {
+		if err := a.buildTee(p); err != nil { // calling our new function only if output type is file and stream
+			return nil, err
+		}
+	}
 
 	return a, nil
 }
@@ -70,6 +76,12 @@ func (a *AudioInput) AddToBin(bin *gst.Bin) error {
 	}
 	if a.encoder != nil {
 		if err := bin.Add(a.encoder); err != nil {
+			return err
+		}
+	}
+	//we add an if statement to add the tee element to the bin
+	if a.tee != nil {
+		if err := bin.Add(a.tee); err != nil {
 			return err
 		}
 	}
@@ -107,6 +119,13 @@ func (a *AudioInput) Link() error {
 		} else {
 			if link := getSrcPad(a.decoder).Link(a.encoder.GetStaticPad("sink")); link != gst.PadLinkOK {
 				return errors.ErrPadLinkFailed("audio decoder", "audio encoder", link.String())
+			}
+		}
+
+		// in case we have a tee link that to the encoder
+		if a.tee != nil {
+			if link := a.encoder.GetStaticPad("src").Link(a.tee.GetStaticPad("sink")); link != gst.PadLinkOK {
+				return errors.ErrPadLinkFailed("audio encoder", "audio tee", link.String())
 			}
 		}
 	}
@@ -267,6 +286,16 @@ func (a *AudioInput) buildEncoder(p *params.Params) error {
 		return errors.ErrNotSupported(string(p.AudioCodec))
 	}
 
+	return nil
+}
+
+// our new buildTee function to build a tee in case of file and stream output
+func (a *AudioInput) buildTee(p *params.Params) error {
+	tee, err := gst.NewElement("tee")
+	if err != nil {
+		return err
+	}
+	a.tee = tee
 	return nil
 }
 

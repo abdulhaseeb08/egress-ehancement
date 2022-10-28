@@ -120,6 +120,18 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 			return nil, err
 		}
 
+		//in case of file and stream output we have two source ghost pads
+		//that we need to connect with the two sink ghost pads
+		if p.OutputType == params.OutputTypeFS {
+			srcPadflv := in.Bin().Element.GetStaticPad("flvsrc")
+			srcPadmp4 := in.Bin().Element.GetStaticPad("mp4src")
+			sinkPadrtmp := out.Element().GetStaticPad("rtmpsink")
+			sinkPadfile := out.Element().GetStaticPad("mp4sink")
+
+			srcPadflv.Link(sinkPadrtmp)
+			srcPadmp4.Link(sinkPadfile)
+		}
+
 		// link bins
 		if err = in.Bin().Link(out.Element()); err != nil {
 			return nil, err
