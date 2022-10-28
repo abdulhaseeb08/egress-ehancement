@@ -547,7 +547,7 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 	return nil
 }
 
-//TODO: have to update this function after changing the protobuf files
+//TODO: have to update this function after changing the protobuf filesss
 func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string, storageFilepath string, output interface{}) error {
 	p.EgressType = EgressTypeFileAndStream
 	p.StorageFilepath = storageFilepath
