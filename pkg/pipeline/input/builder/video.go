@@ -40,7 +40,7 @@ func NewSDKVideoInput(p *params.Params, src *app.Source, codec webrtc.RTPCodecPa
 	if err := v.buildEncoder(p); err != nil {
 		return nil, err
 	}
-	if p.OutputType == params.OutputTypeFS { // a new if statement to build tee element in case of file and stream output
+	if p.EgressType == params.EgressTypeFileAndStream { // a new if statement to build tee element in case of file and stream output
 		if err := v.buildTee(p); err != nil {
 			return nil, err
 		}

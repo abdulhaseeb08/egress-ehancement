@@ -374,6 +374,21 @@ func buildMux(p *params.Params) ([]*gst.Element, error) {
 		}
 
 	case params.OutputTypeRTMP:
+		if p.EgressType == params.EgressTypeFileAndStream {
+			flvmux, err := gst.NewElement("flvmux")
+			if err != nil {
+				return nil, err
+			}
+			if err = flvmux.SetProperty("streamable", true); err != nil {
+				return nil, err
+			}
+			mp4mux, err := gst.NewElement("mp4mux")
+			if err != nil {
+				return nil, err
+			} else {
+				return []*gst.Element{flvmux, mp4mux}, nil
+			}
+		}
 		flvmux, err := gst.NewElement("flvmux")
 		if err != nil {
 			return nil, err
@@ -401,22 +416,6 @@ func buildMux(p *params.Params) ([]*gst.Element, error) {
 			return nil, err
 		}
 		return []*gst.Element{splitmuxsink}, nil
-
-	//adding a new case for our new output type
-	case params.OutputTypeFS:
-		flvmux, err := gst.NewElement("flvmux")
-		if err != nil {
-			return nil, err
-		}
-		if err = flvmux.SetProperty("streamable", true); err != nil {
-			return nil, err
-		}
-		mp4mux, err := gst.NewElement("mp4mux")
-		if err != nil {
-			return nil, err
-		} else {
-			return []*gst.Element{flvmux, mp4mux}, nil
-		}
 
 	default:
 		return nil, errors.ErrInvalidInput("output type")

@@ -104,10 +104,10 @@ type FileAndStreamParams struct {
 	//for rtmp
 	WebsocketUrlFS string
 	StreamUrlsFS   []string
-	StreamInfoFS   map[string]*livekit.StreamInfo
+	StreamInfoFS   map[string]*livekit.StreamInFileAndStreamInfo
 
 	//for file
-	FileInfoFS        *livekit.FileInfo
+	FileInfoFS        *livekit.FileAndStreamInfo
 	LocalFilepathFS   string
 	StorageFilepathFS string
 }
@@ -316,6 +316,15 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 			p.DisableManifest = o.Segments.DisableManifest
 			p.updateOutputType(o.Segments.Protocol)
 			if err = p.updateSegmentsParams(o.Segments.FilenamePrefix, o.Segments.PlaylistName, o.Segments.SegmentDuration, o.Segments.Output); err != nil {
+				return
+			}
+
+		case *livekit.TrackCompositeEgressRequest_FileAndStream: // adding our new output case statement
+			p.DisableManifest = o.FileAndStream.DisableManifest
+			if o.FileAndStream.FileType != livekit.EncodedFileType_DEFAULT_FILETYPE {
+				p.updateOutputType(o.FileAndStream.FileType)
+			}
+			if err = p.updateFileAndStreamParams(OutputTypeRTMP, o.FileAndStream.Urls, o.FileAndStream.Filepath, o.FileAndStream.Output); err != nil {
 				return
 			}
 
@@ -593,11 +602,12 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 }
 
 //TODO: have to update this function after changing the protobuf filesss
+//Update: Done
 func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string, storageFilepath string, output interface{}) error {
 	p.EgressType = EgressTypeFileAndStream
-	p.StorageFilepath = storageFilepath
-	p.FileInfo = &livekit.FileInfo{}
-	p.Info.Result = &livekit.EgressInfo_File{File: p.FileInfo}
+	p.StorageFilepathFS = storageFilepath
+	p.FileInfoFS = &livekit.FileAndStreamInfo{}
+	//p.Info.Result = &livekit.EgressInfo_FileAndStream{FileAndStream: p.FileInfoFS}
 
 	// output location
 	switch o := output.(type) {
@@ -629,38 +639,29 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 			return err
 		}
 	} else {
-		p.StorageFilepath = stringReplace(p.StorageFilepath, replacements)
+		p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
 	}
 
 	p.OutputType = outputType
 
-	switch p.OutputType {
-	case OutputTypeRTMP:
-		p.EgressType = EgressTypeStream
-		p.AudioCodec = MimeTypeAAC
-		p.VideoCodec = MimeTypeH264
-		p.StreamUrls = urls
+	p.EgressType = EgressTypeStream
+	p.AudioCodec = MimeTypeAAC
+	p.VideoCodec = MimeTypeH264
+	p.StreamUrls = urls
 
-	case OutputTypeRaw:
-		p.EgressType = EgressTypeWebsocket
-		p.AudioCodec = MimeTypeRaw
-		p.WebsocketUrl = urls[0]
-		p.MutedChan = make(chan bool, 1)
-	}
-
-	p.StreamInfo = make(map[string]*livekit.StreamInfo)
-	var streamInfoList []*livekit.StreamInfo
+	p.StreamInfoFS = make(map[string]*livekit.StreamInFileAndStreamInfo)
+	var streamInfoList []*livekit.StreamInFileAndStreamInfo
 	for _, url := range urls {
 		if err := p.VerifyUrl(url); err != nil {
 			return err
 		}
 
-		info := &livekit.StreamInfo{Url: url}
-		p.StreamInfo[url] = info
+		info := &livekit.StreamInFileAndStreamInfo{Url: url}
+		p.StreamInfoFS[url] = info
 		streamInfoList = append(streamInfoList, info)
 	}
 
-	p.Info.Result = &livekit.EgressInfo_Stream{Stream: &livekit.StreamInfoList{Info: streamInfoList}}
+	p.Info.Result = &livekit.EgressInfo_FileAndStream{FileAndStream: &livekit.FileAndStreamInfo{Info: streamInfoList}}
 	return nil
 }
 

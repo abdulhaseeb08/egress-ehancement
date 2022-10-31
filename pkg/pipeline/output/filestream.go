@@ -81,7 +81,7 @@ func buildStreamSinkFS(protocol params.OutputType, url string) (*streamSink, err
 
 	var sink *gst.Element
 	switch protocol {
-	case params.OutputTypeFS:
+	case params.OutputTypeRTMP:
 		sink, err = gst.NewElementWithName("rtmp2sink", fmt.Sprintf("sink_%s", id))
 		if err != nil {
 			return nil, err

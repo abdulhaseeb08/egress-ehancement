@@ -49,7 +49,7 @@ func NewSDKAudioInput(p *params.Params, src *app.Source, codec webrtc.RTPCodecPa
 	if err := a.buildEncoder(p); err != nil {
 		return nil, err
 	}
-	if p.OutputType == params.OutputTypeFS {
+	if p.EgressType == params.EgressTypeFileAndStream {
 		if err := a.buildTee(p); err != nil { // calling our new function only if output type is file and stream
 			return nil, err
 		}
