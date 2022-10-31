@@ -18,8 +18,8 @@ import (
 	"google.golang.org/api/googleapi"
 	"google.golang.org/api/option"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/livekit/egress/pkg/pipeline/params"
 )
 
 const (

@@ -9,9 +9,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/abdulhaseeb08/protocol/utils"
-	"github.com/livekit/egress/pkg/pipeline/params"
 )
 
 func testRoomCompositeFile(t *testing.T, conf *TestConfig) {

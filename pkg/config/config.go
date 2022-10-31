@@ -10,11 +10,11 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/yaml.v3"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
 	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/abdulhaseeb08/protocol/redis"
 	"github.com/abdulhaseeb08/protocol/utils"
-	"github.com/livekit/egress/pkg/errors"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 

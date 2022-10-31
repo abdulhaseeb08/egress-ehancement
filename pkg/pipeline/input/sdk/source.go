@@ -9,9 +9,9 @@ import (
 	"github.com/tinyzimmer/go-gst/gst"
 	"github.com/tinyzimmer/go-gst/gst/app"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/livekit/egress/pkg/errors"
-	"github.com/livekit/egress/pkg/pipeline/params"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 

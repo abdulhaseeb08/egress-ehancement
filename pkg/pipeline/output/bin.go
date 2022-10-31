@@ -6,10 +6,10 @@ import (
 
 	"github.com/tinyzimmer/go-gst/gst"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/abdulhaseeb08/protocol/tracer"
-	"github.com/livekit/egress/pkg/errors"
-	"github.com/livekit/egress/pkg/pipeline/params"
 )
 
 type OutputBin struct {

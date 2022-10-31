@@ -3,9 +3,9 @@ package output
 import (
 	"fmt"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/utils"
-	"github.com/livekit/egress/pkg/errors"
-	"github.com/livekit/egress/pkg/pipeline/params"
 	"github.com/tinyzimmer/go-gst/gst"
 )
 

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/abdulhaseeb08/protocol/utils"
-	"github.com/livekit/egress/pkg/pipeline/params"
 )
 
 func testTrackCompositeFile(t *testing.T, conf *TestConfig) {

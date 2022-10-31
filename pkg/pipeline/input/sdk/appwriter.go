@@ -14,9 +14,9 @@ import (
 	"github.com/tinyzimmer/go-gst/gst/app"
 	"go.uber.org/atomic"
 
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
+	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/livekit/egress/pkg/errors"
-	"github.com/livekit/egress/pkg/pipeline/params"
 	"github.com/livekit/livekit-server/pkg/sfu"
 	"github.com/livekit/livekit-server/pkg/sfu/buffer"
 	lksdk "github.com/livekit/server-sdk-go"
