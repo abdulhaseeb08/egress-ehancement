@@ -9,11 +9,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"go.uber.org/atomic"
 
+	"github.com/abdulhaseeb08/protocol/livekit"
+	"github.com/abdulhaseeb08/protocol/logger"
+	"github.com/abdulhaseeb08/protocol/utils"
 	"github.com/livekit/egress/pkg/config"
 	"github.com/livekit/egress/pkg/errors"
-	"github.com/livekit/protocol/livekit"
-	"github.com/livekit/protocol/logger"
-	"github.com/livekit/protocol/utils"
 )
 
 type Monitor struct {

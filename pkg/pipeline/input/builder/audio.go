@@ -8,9 +8,9 @@ import (
 	"github.com/tinyzimmer/go-gst/gst"
 	"github.com/tinyzimmer/go-gst/gst/app"
 
+	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/livekit/egress/pkg/errors"
 	"github.com/livekit/egress/pkg/pipeline/params"
-	"github.com/livekit/protocol/logger"
 )
 
 type AudioInput struct {

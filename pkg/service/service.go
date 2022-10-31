@@ -19,14 +19,14 @@ import (
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
 
+	"github.com/abdulhaseeb08/protocol/egress"
+	"github.com/abdulhaseeb08/protocol/livekit"
+	"github.com/abdulhaseeb08/protocol/logger"
+	"github.com/abdulhaseeb08/protocol/tracer"
 	"github.com/livekit/egress/pkg/config"
 	"github.com/livekit/egress/pkg/pipeline/params"
 	"github.com/livekit/egress/pkg/stats"
 	"github.com/livekit/egress/version"
-	"github.com/livekit/protocol/egress"
-	"github.com/livekit/protocol/livekit"
-	"github.com/livekit/protocol/logger"
-	"github.com/livekit/protocol/tracer"
 )
 
 const shutdownTimer = time.Second * 30

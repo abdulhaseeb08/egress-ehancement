@@ -11,10 +11,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
+	"github.com/abdulhaseeb08/protocol/egress"
+	"github.com/abdulhaseeb08/protocol/utils"
 	"github.com/livekit/egress/pkg/config"
 	"github.com/livekit/egress/pkg/service"
-	"github.com/livekit/protocol/egress"
-	"github.com/livekit/protocol/utils"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 

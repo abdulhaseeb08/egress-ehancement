@@ -5,8 +5,8 @@ package test
 import (
 	"testing"
 
-	"github.com/livekit/protocol/livekit"
-	"github.com/livekit/protocol/utils"
+	"github.com/abdulhaseeb08/protocol/livekit"
+	"github.com/abdulhaseeb08/protocol/utils"
 )
 
 func testWebFile(t *testing.T, conf *TestConfig) {

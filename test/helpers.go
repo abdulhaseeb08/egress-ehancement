@@ -22,10 +22,10 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/api/option"
 
+	"github.com/abdulhaseeb08/protocol/livekit"
+	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/livekit/egress/pkg/config"
 	"github.com/livekit/egress/pkg/pipeline/params"
-	"github.com/livekit/protocol/livekit"
-	"github.com/livekit/protocol/logger"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 

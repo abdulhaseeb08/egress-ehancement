@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
+	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/livekit/egress/pkg/service"
-	"github.com/livekit/protocol/logger"
 )
 
 type httpHandler struct {

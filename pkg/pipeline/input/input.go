@@ -5,12 +5,12 @@ import (
 
 	"github.com/tinyzimmer/go-gst/gst"
 
+	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/livekit/egress/pkg/config"
 	"github.com/livekit/egress/pkg/errors"
 	"github.com/livekit/egress/pkg/pipeline/input/sdk"
 	"github.com/livekit/egress/pkg/pipeline/input/web"
 	"github.com/livekit/egress/pkg/pipeline/params"
-	"github.com/livekit/protocol/livekit"
 )
 
 type Input interface {

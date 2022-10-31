@@ -9,10 +9,10 @@ import (
 	"github.com/tinyzimmer/go-gst/gst/app"
 	"go.uber.org/atomic"
 
+	"github.com/abdulhaseeb08/protocol/logger"
+	"github.com/abdulhaseeb08/protocol/tracer"
 	"github.com/livekit/egress/pkg/pipeline/input/builder"
 	"github.com/livekit/egress/pkg/pipeline/params"
-	"github.com/livekit/protocol/logger"
-	"github.com/livekit/protocol/tracer"
 	lksdk "github.com/livekit/server-sdk-go"
 )
 
