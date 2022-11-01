@@ -7,6 +7,7 @@ replace github.com/tinyzimmer/go-gst v0.2.32 => github.com/livekit/go-gst v0.0.0
 require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/Azure/azure-storage-blob-go v0.14.0
+	github.com/abdulhaseeb08/livekit-server v0.0.0-20221101152139-0b527e562e10
 	github.com/abdulhaseeb08/protocol v0.0.0-20221031124806-4b2381812fa1
 	github.com/aws/aws-sdk-go v1.43.3
 	github.com/chromedp/cdproto v0.0.0-20220208224320-6efb837e6bc2
@@ -17,16 +18,15 @@ require (
 	github.com/googleapis/gax-go/v2 v2.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/grafov/m3u8 v0.11.1
-	github.com/livekit/livekit-server v1.2.1
-	github.com/livekit/mageutil v0.0.0-20220927214055-ff37ecf1f093
+	github.com/livekit/mageutil v0.0.0-20221002073820-d9198083cfdc
 	github.com/livekit/server-sdk-go v1.0.0
 	github.com/pion/rtp v1.7.13
-	github.com/pion/webrtc/v3 v3.1.44
+	github.com/pion/webrtc/v3 v3.1.47
 	github.com/prometheus/client_golang v1.13.0
 	github.com/stretchr/testify v1.8.1
 	github.com/tinyzimmer/go-glib v0.0.25
 	github.com/tinyzimmer/go-gst v0.2.32
-	github.com/urfave/cli/v2 v2.15.0
+	github.com/urfave/cli/v2 v2.20.3
 	go.uber.org/atomic v1.10.0
 	go.uber.org/zap v1.23.0
 	google.golang.org/api v0.74.0
@@ -66,10 +66,12 @@ require (
 	github.com/jxskiss/base62 v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lithammer/shortuuid/v3 v3.0.7 // indirect
-	github.com/livekit/protocol v1.0.2-0.20220909090645-6ec04e9ca47e // indirect
+	github.com/livekit/livekit-server v1.2.1 // indirect
+	github.com/livekit/mediatransportutil v0.0.0-20221007030528-7440725c362b // indirect
+	github.com/livekit/protocol v1.1.2 // indirect
 	github.com/livekit/rtcscore-go v0.0.0-20220815072451-20ee10ae1995 // indirect
 	github.com/mackerelio/go-osstat v0.2.3 // indirect
-	github.com/magefile/mage v1.13.0 // indirect
+	github.com/magefile/mage v1.14.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-ieproxy v0.0.1 // indirect
 	github.com/mattn/go-pointer v0.0.1 // indirect
@@ -77,7 +79,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/pion/datachannel v1.5.2 // indirect
 	github.com/pion/dtls/v2 v2.1.5 // indirect
-	github.com/pion/ice/v2 v2.2.7 // indirect
+	github.com/pion/ice/v2 v2.2.11 // indirect
 	github.com/pion/interceptor v0.1.12 // indirect
 	github.com/pion/logging v0.2.2 // indirect
 	github.com/pion/mdns v0.0.5 // indirect
@@ -103,11 +105,11 @@ require (
 	go.opencensus.io v0.23.0 // indirect
 	go.uber.org/goleak v1.1.12 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
-	golang.org/x/net v0.0.0-20220728211354-c7608f3a8462 // indirect
+	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
+	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
-	golang.org/x/sync v0.0.0-20220923202941-7f9b1623fab7 // indirect
-	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
+	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
+	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	google.golang.org/appengine v1.6.7 // indirect

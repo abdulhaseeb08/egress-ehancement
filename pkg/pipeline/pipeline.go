@@ -276,6 +276,20 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 				p.Logger.Errorw("could not store manifest", err)
 			}
 		}
+
+	// adding new case here
+	case params.EgressTypeFileAndStream:
+		var err error
+		p.FileInfoFS.Location, p.FileInfoFS.Size, err = p.storeFile(ctx, p.LocalFilepath, p.StorageFilepath, p.OutputType)
+		if err != nil {
+			p.Info.Error = err.Error()
+		}
+
+		manifestLocalPath := fmt.Sprintf("%s.json", p.LocalFilepath)
+		manifestStoragePath := fmt.Sprintf("%s.json", p.StorageFilepath)
+		if err := p.storeManifest(ctx, manifestLocalPath, manifestStoragePath); err != nil {
+			p.Logger.Errorw("could not store manifest", err)
+		}
 	}
 
 	return p.Info
