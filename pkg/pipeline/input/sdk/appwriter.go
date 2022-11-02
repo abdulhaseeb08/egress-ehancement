@@ -19,8 +19,8 @@ import (
 	"github.com/abdulhaseeb08/livekit-server/pkg/sfu"
 	"github.com/abdulhaseeb08/livekit-server/pkg/sfu/buffer"
 	"github.com/abdulhaseeb08/protocol/logger"
-	lksdk "github.com/livekit/server-sdk-go"
-	"github.com/livekit/server-sdk-go/pkg/samplebuilder"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
+	"github.com/abdulhaseeb08/server-sdk-go/pkg/samplebuilder"
 )
 
 const (

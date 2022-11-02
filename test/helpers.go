@@ -26,7 +26,7 @@ import (
 	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/abdulhaseeb08/protocol/logger"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 const muteDuration = time.Second * 10

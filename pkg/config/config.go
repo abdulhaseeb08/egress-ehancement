@@ -15,7 +15,7 @@ import (
 	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/abdulhaseeb08/protocol/redis"
 	"github.com/abdulhaseeb08/protocol/utils"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 const (

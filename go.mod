@@ -8,7 +8,8 @@ require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/Azure/azure-storage-blob-go v0.14.0
 	github.com/abdulhaseeb08/livekit-server v0.0.0-20221101152139-0b527e562e10
-	github.com/abdulhaseeb08/protocol v0.0.0-20221102080238-2cedbfef6dd1
+	github.com/abdulhaseeb08/protocol v0.0.0-20221102111825-691b0af9d20e
+	github.com/abdulhaseeb08/server-sdk-go v0.0.0-20221102122723-0d3e0cd7e8bb
 	github.com/aws/aws-sdk-go v1.43.3
 	github.com/chromedp/cdproto v0.0.0-20220208224320-6efb837e6bc2
 	github.com/chromedp/chromedp v0.7.7
@@ -19,7 +20,6 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/grafov/m3u8 v0.11.1
 	github.com/livekit/mageutil v0.0.0-20221002073820-d9198083cfdc
-	github.com/livekit/server-sdk-go v1.0.0
 	github.com/pion/rtp v1.7.13
 	github.com/pion/webrtc/v3 v3.1.47
 	github.com/prometheus/client_golang v1.13.0
@@ -66,9 +66,7 @@ require (
 	github.com/jxskiss/base62 v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lithammer/shortuuid/v3 v3.0.7 // indirect
-	github.com/livekit/livekit-server v1.2.1 // indirect
 	github.com/livekit/mediatransportutil v0.0.0-20221007030528-7440725c362b // indirect
-	github.com/livekit/protocol v1.1.2 // indirect
 	github.com/livekit/rtcscore-go v0.0.0-20220815072451-20ee10ae1995 // indirect
 	github.com/mackerelio/go-osstat v0.2.3 // indirect
 	github.com/magefile/mage v1.14.0 // indirect

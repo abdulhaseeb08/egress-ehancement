@@ -13,7 +13,7 @@ import (
 	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/logger"
 	"github.com/abdulhaseeb08/protocol/tracer"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 const (

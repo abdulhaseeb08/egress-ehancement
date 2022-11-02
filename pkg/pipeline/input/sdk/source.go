@@ -12,7 +12,7 @@ import (
 	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
 	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
 	"github.com/abdulhaseeb08/protocol/livekit"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 func (s *SDKInput) joinRoom(p *params.Params) error {

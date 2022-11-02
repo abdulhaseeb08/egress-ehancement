@@ -15,7 +15,7 @@ import (
 	"github.com/abdulhaseeb08/egress-ehancement/pkg/service"
 	"github.com/abdulhaseeb08/protocol/egress"
 	"github.com/abdulhaseeb08/protocol/utils"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 type TestConfig struct {

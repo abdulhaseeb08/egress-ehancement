@@ -18,7 +18,7 @@ import (
 	"github.com/abdulhaseeb08/protocol/egress"
 	"github.com/abdulhaseeb08/protocol/livekit"
 	"github.com/abdulhaseeb08/protocol/utils"
-	lksdk "github.com/livekit/server-sdk-go"
+	lksdk "github.com/abdulhaseeb08/server-sdk-go"
 )
 
 const (
