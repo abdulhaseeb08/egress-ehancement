@@ -69,6 +69,7 @@ func NewTestContext(t *testing.T) *TestConfig {
 	err := yaml.Unmarshal([]byte(confString), tc)
 	require.NoError(t, err)
 
+	fmt.Println(confString)
 	conf, err := config.NewConfig(confString)
 	require.NoError(t, err)
 	tc.Config = conf
