@@ -10,6 +10,7 @@ import (
 
 	"cloud.google.com/go/storage"
 	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -53,15 +54,23 @@ func UploadS3(conf *livekit.S3Upload, localFilepath, storageFilepath string, mim
 		return "", err
 	}
 
-	_, err = s3.New(sess).PutObject(&s3.PutObjectInput{
+	putObject := s3.PutObjectInput{
 		Bucket:        aws.String(conf.Bucket),
 		Key:           aws.String(storageFilepath),
 		Body:          file,
 		ContentLength: aws.Int64(fileInfo.Size()),
 		ContentType:   aws.String(string(mime)),
-		Metadata:      convertS3Metadata(conf.Metadata),
-		Tagging:       aws.String(conf.Tagging),
-	})
+	}
+
+	if len(conf.Metadata) > 0 {
+		putObject.Metadata = convertS3Metadata(conf.Metadata)
+	}
+
+	if len(conf.Tagging) > 0 {
+		putObject.Tagging = aws.String(conf.Tagging)
+	}
+
+	_, err = s3.New(sess).PutObject(&putObject)
 	if err != nil {
 		return "", err
 	}
@@ -124,7 +133,7 @@ func UploadAzure(conf *livekit.AzureBlobUpload, localFilepath, storageFilepath s
 	return sUrl, nil
 }
 
-func UploadGCP(conf *livekit.GCPUpload, localFilepath, storageFilepath string, mime params.OutputType) (location string, err error) {
+func UploadGCP(conf *livekit.GCPUpload, localFilepath, storageFilepath string) (location string, err error) {
 	ctx := context.Background()
 	var client *storage.Client
 
@@ -178,4 +187,20 @@ func UploadGCP(conf *livekit.GCPUpload, localFilepath, storageFilepath string, m
 	}
 
 	return fmt.Sprintf("https://%s.storage.googleapis.com/%s", conf.Bucket, storageFilepath), nil
+}
+
+func UploadAliOSS(conf *livekit.AliOSSUpload, localFilePath, requestedPath string) (location string, err error) {
+	client, err := oss.New(conf.Endpoint, conf.AccessKey, conf.Secret)
+	if err != nil {
+		return "", err
+	}
+	bucket, err := client.Bucket(conf.Bucket)
+	if err != nil {
+		return "", err
+	}
+	err = bucket.PutObjectFromFile(requestedPath, localFilePath)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("https://%s.%s/%s", conf.Bucket, conf.Endpoint, requestedPath), nil
 }

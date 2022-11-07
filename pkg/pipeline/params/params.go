@@ -511,12 +511,16 @@ func (p *Params) updateFileParams(storageFilepath string, output interface{}) er
 		p.UploadConfig = o.Azure
 	case *livekit.EncodedFileOutput_Gcp:
 		p.UploadConfig = o.Gcp
+	case *livekit.EncodedFileOutput_AliOSS:
+		p.UploadConfig = o.AliOSS
 	case *livekit.DirectFileOutput_S3:
 		p.UploadConfig = o.S3
 	case *livekit.DirectFileOutput_Azure:
 		p.UploadConfig = o.Azure
 	case *livekit.DirectFileOutput_Gcp:
 		p.UploadConfig = o.Gcp
+	case *livekit.DirectFileOutput_AliOSS:
+		p.UploadConfig = o.AliOSS
 	default:
 		p.UploadConfig = p.conf.FileUpload
 	}
@@ -587,6 +591,8 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 		p.UploadConfig = o.Azure
 	case *livekit.SegmentedFileOutput_Gcp:
 		p.UploadConfig = o.Gcp
+	case *livekit.SegmentedFileOutput_AliOSS:
+		p.UploadConfig = o.AliOSS
 	default:
 		p.UploadConfig = p.conf.FileUpload
 	}
@@ -812,7 +818,7 @@ func (p *Params) UpdatePrefixAndPlaylist(identifier string, replacements map[str
 	ext := FileExtensionForOutputType[p.OutputType]
 
 	if p.LocalFilePrefix == "" || strings.HasSuffix(p.LocalFilePrefix, "/") {
-		p.LocalFilePrefix = fmt.Sprintf("%s%s-%s", p.LocalFilePrefix, identifier, time.Now().String())
+		p.LocalFilePrefix = fmt.Sprintf("%s%s-%s", p.LocalFilePrefix, identifier, time.Now().Format("2006-01-02T150405"))
 	}
 
 	// Playlist path is relative to file prefix. Only keep actual filename if a full path is given
