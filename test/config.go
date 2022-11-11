@@ -49,6 +49,7 @@ type TestConfig struct {
 	runFileTests           bool `yaml:"-"`
 	runStreamTests         bool `yaml:"-"`
 	runSegmentTests        bool `yaml:"-"`
+	runFileAndStreamTests  bool `yaml:"-"` // a new test statement
 }
 
 func NewTestContext(t *testing.T) *TestConfig {

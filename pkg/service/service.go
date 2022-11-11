@@ -281,11 +281,12 @@ func (s *Service) Status() ([]byte, error) {
 		"CpuLoad": s.monitor.GetCPULoad(),
 	}
 	s.processes.Range(func(key, value interface{}) bool {
+		//fmt.Println("inside the Service Status Function processes range") // remove afterwards
 		p := value.(*process)
 		info[key.(string)] = p.req.Request
 		return true
 	})
-
+	//fmt.Println(info)
 	return json.Marshal(info)
 }
 

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"google.golang.org/protobuf/proto"
 
@@ -66,11 +67,13 @@ func (h *Handler) HandleRequest(ctx context.Context, req *livekit.StartEgressReq
 
 		case res := <-result:
 			// recording finished
+			fmt.Println("Results received")
 			h.sendUpdate(ctx, res)
 			return
 
 		case msg := <-requests.Channel():
 			// request received
+			fmt.Println("Requests received")
 			request := &livekit.EgressRequest{}
 			err = proto.Unmarshal(requests.Payload(msg), request)
 			if err != nil {
@@ -142,6 +145,8 @@ func (h *Handler) sendUpdate(ctx context.Context, info *livekit.EgressInfo) {
 		)
 	}
 
+	fmt.Println("sending update: ")
+	fmt.Println("the update is: ", info)
 	if err := h.rpcServer.SendUpdate(ctx, info); err != nil {
 		logger.Errorw("failed to send update", err)
 	}

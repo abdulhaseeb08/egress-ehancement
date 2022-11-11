@@ -162,6 +162,7 @@ func (p *Pipeline) OnStatusUpdate(f func(context.Context, *livekit.EgressInfo)) 
 }
 
 func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
+	fmt.Println("Pipeline run called")
 	ctx, span := tracer.Start(ctx, "Pipeline.Run")
 	defer span.End()
 
@@ -186,7 +187,9 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 
 	// wait until room is ready
 	start := p.in.StartRecording()
+	fmt.Println("Start recording")
 	if start != nil {
+		fmt.Println("Start was not nil")
 		select {
 		case <-p.closed:
 			p.in.Close()
@@ -200,16 +203,20 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	// close when room ends
 	go func() {
 		<-p.in.EndRecording()
+		fmt.Println("End recording sending EOS")
 		p.SendEOS(ctx)
 	}()
 
 	// session limit timer
-	p.startSessionLimitTimer(ctx)
+	fmt.Println("Start session limit timer")
+	p.startSessionLimitTimer(ctx) // sends EOS signal after the max allowed time is reached
 
 	// add watch
+	fmt.Println("Adding watch")
 	p.loop = glib.NewMainLoop(glib.MainContextDefault(), false)
 	p.pipeline.GetPipelineBus().AddWatch(p.messageWatch)
 
+	fmt.Println("Setting pipeline state to playing")
 	// set state to playing (this does not start the pipeline)
 	if err := p.pipeline.SetState(gst.StatePlaying); err != nil {
 		span.RecordError(err)
@@ -224,9 +231,13 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	}
 
 	// run main loop
+	fmt.Println("Run main loop")
 	p.loop.Run()
 
 	// close input source
+	fmt.Println("Close input source")
+	fmt.Println("Printing Egress Info")
+	fmt.Println(p.Info)
 	p.in.Close()
 
 	// update endedAt from sdk source
@@ -292,6 +303,8 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 		}
 	}
 
+	fmt.Println("returning info")
+	fmt.Println(p.Info)
 	return p.Info
 }
 
@@ -514,8 +527,11 @@ func (p *Pipeline) close(ctx context.Context) {
 }
 
 func (p *Pipeline) startSessionLimitTimer(ctx context.Context) {
+	fmt.Println("Inside start session limit timer")
 	if timeout := p.GetSessionTimeout(); timeout > 0 {
+		fmt.Println("timeout is : ", timeout)
 		p.limitTimer = time.AfterFunc(timeout, func() {
+			fmt.Println("calling the AfterFunc in its own goRoutine, Limit Reached")
 			p.SendEOS(ctx)
 			p.Info.Status = livekit.EgressStatus_EGRESS_LIMIT_REACHED
 		})

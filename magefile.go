@@ -55,7 +55,7 @@ func Integration(configFile string) error {
 		fmt.Sprintf("docker pull livekit/gstreamer:%s-dev", gstVersion),
 		"docker build -t egress-test -f build/test/Dockerfile .",
 		fmt.Sprintf(
-			"docker run --rm -e %s=%s -v %s/test:/out egress-test",
+			"docker run --network host --rm -e %s=%s -v %s/test:/out egress-test",
 			config, configFile, dir,
 		),
 	)

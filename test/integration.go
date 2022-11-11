@@ -128,6 +128,12 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 				testTrackCompositeSegments(t, conf)
 			})
 		}
+
+		// if conf.runFileAndStreamTests {
+		// 	t.Run("TrackComposite/FileAndStream", func(t *testing.T) {
+
+		// 	})
+		// }
 	}
 
 	if conf.runTrackTests {
@@ -166,25 +172,28 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 }
 
 func awaitIdle(t *testing.T, svc *service.Service) {
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 60; i++ {
 		status := getStatus(t, svc)
 		if len(status) == 1 {
+			//if i == 29 {
 			return
 		}
 		time.Sleep(time.Second)
 	}
-	t.Fatal("service not idle after 30s")
+	t.Fatal("service not idle after 60s")
 }
 
 func runFileTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, test *testCase) {
 	conf.SessionLimits.FileOutputMaxDuration = test.sessionTimeout
+	fmt.Println("test.sessionTimeout is: ")
+	fmt.Println(conf.SessionLimits.FileOutputMaxDuration)
 
 	// start
 	egressID := startEgress(t, conf, req)
 
 	var res *livekit.EgressInfo
 	if conf.SessionLimits.FileOutputMaxDuration > 0 {
-		time.Sleep(conf.SessionLimits.FileOutputMaxDuration + time.Second)
+		time.Sleep(conf.SessionLimits.FileOutputMaxDuration + time.Second*3)
 
 		res = checkStoppedEgress(t, conf, egressID, livekit.EgressStatus_EGRESS_LIMIT_REACHED)
 	} else {
@@ -418,9 +427,11 @@ func getUpdate(t *testing.T, sub utils.PubSub, egressID string) *livekit.EgressI
 			require.NoError(t, proto.Unmarshal(b, info))
 			if info.EgressId == egressID {
 				return info
+			} else {
+				t.Fatal("ID not matched")
 			}
 
-		case <-time.After(time.Second * 45):
+		case <-time.After(time.Second * 90):
 			t.Fatal("no update from results channel")
 			return nil
 		}

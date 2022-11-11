@@ -7,9 +7,9 @@ replace github.com/tinyzimmer/go-gst v0.2.32 => github.com/livekit/go-gst v0.0.0
 require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/Azure/azure-storage-blob-go v0.14.0
-	github.com/abdulhaseeb08/livekit-server v0.0.0-20221103120240-9871b77170b8
-	github.com/abdulhaseeb08/protocol v0.0.0-20221103115846-3a04ea3862cb
-	github.com/abdulhaseeb08/server-sdk-go v0.0.0-20221103120329-e05a500c5c58
+	github.com/abdulhaseeb08/livekit-server v0.0.0-20221111155605-e540405ac14b
+	github.com/abdulhaseeb08/protocol v0.0.0-20221111153142-5c89face69df
+	github.com/abdulhaseeb08/server-sdk-go v0.0.0-20221111160046-be99769fc513
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible
 	github.com/aws/aws-sdk-go v1.43.3
 	github.com/chromedp/cdproto v0.0.0-20220208224320-6efb837e6bc2

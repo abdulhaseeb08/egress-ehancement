@@ -8,9 +8,9 @@ redis:
 local_directory: /out/output
 room_only: false
 web_only: false
-track_composite_only: false
+track_composite_only: true
 track_only: false
-file_only: false
+file_only: true
 stream_only: false
 segments_only: false
 muting: false
