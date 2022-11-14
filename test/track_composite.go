@@ -178,99 +178,36 @@ func testTrackCompositeSegments(t *testing.T, conf *TestConfig) {
 	}
 }
 
-// func testTrackCompositeFileAndStream(t *testing.T, conf *TestConfig) {
-// 	for _, test := range []*testCase{
-// 		{
-// 			name:       "tc-vp8-mp4",
-// 			fileType:   livekit.EncodedFileType_MP4,
-// 			audioCodec: params.MimeTypeOpus,
-// 			videoCodec: params.MimeTypeVP8,
-// 			filename:   "tc_{publisher_identity}_vp8_{time}.mp4",
-// 		},
-// 		{
-// 			name:       "tc-h264-mp4",
-// 			fileType:   livekit.EncodedFileType_MP4,
-// 			audioCodec: params.MimeTypeOpus,
-// 			videoCodec: params.MimeTypeH264,
-// 			filename:   "tc_{room_name}_h264_{time}.mp4",
-// 		},
-// 		{
-// 			name:           "tc-limit",
-// 			fileType:       livekit.EncodedFileType_MP4,
-// 			audioCodec:     params.MimeTypeOpus,
-// 			videoCodec:     params.MimeTypeH264,
-// 			filename:       "tc_limit_{time}.mp4",
-// 			sessionTimeout: time.Second * 20,
-// 		},
-// 	} {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			awaitIdle(t, conf.svc)
-// 			audioTrackID, videoTrackID := publishSamplesToRoom(t, conf.room, test.audioCodec, test.videoCodec, conf.Muting)
+func testTrackCompositeFileAndStream(t *testing.T, conf *TestConfig) {
+	for _, test := range []*testCase{
+		{name: "tc-rtmp-mp4",
+			filename: "tc_{room_name}_rtmp_h264_{time}.mp4",
+		},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			awaitIdle(t, conf.svc)
+			audioTrackID, videoTrackID := publishSamplesToRoom(t, conf.room, params.MimeTypeOpus, params.MimeTypeH264, conf.Muting)
 
-// 			trackRequest := &livekit.TrackCompositeEgressRequest{
-// 				RoomName: conf.room.Name(),
-// 				Output: &livekit.TrackCompositeEgressRequest_File{
-// 					File: &livekit.EncodedFileOutput{
-// 						FileType: test.fileType,
-// 						Filepath: getFilePath(conf.Config, test.filename),
-// 					},
-// 				},
-// 			}
-// 			if !test.audioOnly {
-// 				trackRequest.VideoTrackId = videoTrackID
-// 			}
-// 			if !test.videoOnly {
-// 				trackRequest.AudioTrackId = audioTrackID
-// 			}
+			req := &livekit.StartEgressRequest{
+				EgressId: utils.NewGuid(utils.EgressPrefix),
+				Request: &livekit.StartEgressRequest_TrackComposite{
+					TrackComposite: &livekit.TrackCompositeEgressRequest{
+						RoomName:     conf.room.Name(),
+						AudioTrackId: audioTrackID,
+						VideoTrackId: videoTrackID,
+						Output: &livekit.TrackCompositeEgressRequest_FileAndStream{
+							FileAndStream: &livekit.FileAndStreamOutput{
+								Urls:     []string{streamUrl1},
+								FileType: test.fileType,
+								Filepath: getFilePath(conf.Config, test.filename),
+							},
+						},
+					},
+				},
+			}
 
-// 			if test.options != nil {
-// 				trackRequest.Options = &livekit.TrackCompositeEgressRequest_Advanced{
-// 					Advanced: test.options,
-// 				}
-// 			}
+			runFileAndStreamTest(t, conf, req, test.sessionTimeout)
+		})
 
-// 			req := &livekit.StartEgressRequest{
-// 				EgressId: utils.NewGuid(utils.EgressPrefix),
-// 				Request: &livekit.StartEgressRequest_TrackComposite{
-// 					TrackComposite: trackRequest,
-// 				},
-// 			}
-
-// 			runFileTest(t, conf, req, test)
-// 		})
-// 	}
-
-// 	//stream part
-// 	for _, test := range []*testCase{
-// 		{
-// 			name: "tc-rtmp",
-// 		},
-// 		{
-// 			name:           "tc-rtmp-limit",
-// 			sessionTimeout: time.Second * 20,
-// 		},
-// 	} {
-// 		t.Run(test.name, func(t *testing.T) {
-// 			awaitIdle(t, conf.svc)
-// 			audioTrackID, videoTrackID := publishSamplesToRoom(t, conf.room, params.MimeTypeOpus, params.MimeTypeVP8, conf.Muting)
-
-// 			req := &livekit.StartEgressRequest{
-// 				EgressId: utils.NewGuid(utils.EgressPrefix),
-// 				Request: &livekit.StartEgressRequest_TrackComposite{
-// 					TrackComposite: &livekit.TrackCompositeEgressRequest{
-// 						RoomName:     conf.room.Name(),
-// 						AudioTrackId: audioTrackID,
-// 						VideoTrackId: videoTrackID,
-// 						Output: &livekit.TrackCompositeEgressRequest_Stream{
-// 							Stream: &livekit.StreamOutput{
-// 								Urls: []string{streamUrl1},
-// 							},
-// 						},
-// 					},
-// 				},
-// 			}
-
-// 			runStreamTest(t, conf, req, test.sessionTimeout)
-// 		})
-// 	}
-// }
+	}
+}

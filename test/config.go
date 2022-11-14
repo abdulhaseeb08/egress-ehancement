@@ -33,6 +33,7 @@ type TestConfig struct {
 	SegmentTestsOnly        bool   `yaml:"segments_only"`
 	Muting                  bool   `yaml:"muting"`
 	GstDebug                int    `yaml:"gst_debug"`
+	FileAndStreamTests      bool   `yaml:"fileAndstream_only"`
 
 	// test context
 	svc       *service.Service `yaml:"-"`
@@ -89,6 +90,7 @@ func NewTestContext(t *testing.T) *TestConfig {
 	tc.runWebTests = !tc.RoomTestsOnly && !tc.ParticipantTestsOnly && !tc.TrackCompositeTestsOnly && !tc.TrackTestsOnly
 	tc.runFileTests = !tc.StreamTestsOnly && !tc.SegmentTestsOnly
 	tc.runStreamTests = !tc.FileTestsOnly && !tc.SegmentTestsOnly
+	tc.runFileAndStreamTests = !tc.FileTestsOnly && !tc.SegmentTestsOnly && !tc.StreamTestsOnly
 	tc.runSegmentTests = !tc.FileTestsOnly && !tc.StreamTestsOnly
 
 	err = os.Setenv("GST_DEBUG", fmt.Sprint(tc.GstDebug))

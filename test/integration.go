@@ -111,29 +111,30 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 	}
 
 	if conf.runTrackCompositeTests {
-		if conf.runFileTests {
-			t.Run("TrackComposite/File", func(t *testing.T) {
-				testTrackCompositeFile(t, conf)
-			})
-		}
-
-		if conf.runStreamTests {
-			t.Run("TrackComposite/Stream", func(t *testing.T) {
-				testTrackCompositeStream(t, conf)
-			})
-		}
-
-		if conf.runSegmentTests {
-			t.Run("TrackComposite/Segments", func(t *testing.T) {
-				testTrackCompositeSegments(t, conf)
-			})
-		}
-
-		// if conf.runFileAndStreamTests {
-		// 	t.Run("TrackComposite/FileAndStream", func(t *testing.T) {
-
+		// if conf.runFileTests {
+		// 	t.Run("TrackComposite/File", func(t *testing.T) {
+		// 		testTrackCompositeFile(t, conf)
 		// 	})
 		// }
+
+		// if conf.runStreamTests {
+		// 	t.Run("TrackComposite/Stream", func(t *testing.T) {
+		// 		testTrackCompositeStream(t, conf)
+		// 	})
+		// }
+
+		// if conf.runSegmentTests {
+		// 	t.Run("TrackComposite/Segments", func(t *testing.T) {
+		// 		testTrackCompositeSegments(t, conf)
+		// 	})
+		// }
+
+		if conf.runFileAndStreamTests {
+			t.Run("TrackComposite/FileAndStream", func(t *testing.T) {
+				testTrackCompositeFileAndStream(t, conf)
+
+			})
+		}
 	}
 
 	if conf.runTrackTests {
@@ -214,7 +215,20 @@ func runFileTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest
 	verifyFile(t, conf, p, res)
 }
 
-func runStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) {
+func runStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) 
+	
+	
+	
+	conf.SessionLimits.StreamOutputMaxDuration = sessionTimeout
+
+	if conf.SessionLimits.StreamOutputMaxDuration > 0 {
+		runTimeLimitStreamTest(t, conf, req)
+	} else {
+		runMultipleStreamTest(t, conf, req)
+	}
+}
+
+func runFileAndStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) {
 	conf.SessionLimits.StreamOutputMaxDuration = sessionTimeout
 
 	if conf.SessionLimits.StreamOutputMaxDuration > 0 {

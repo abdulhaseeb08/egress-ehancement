@@ -122,6 +122,7 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 
 		//in case of file and stream output we have two source ghost pads
 		//that we need to connect with the two sink ghost pads
+		fmt.Println("MYTYPE  ", p.EgressType)
 		if p.EgressType == params.EgressTypeFileAndStream {
 			srcPadflv := in.Bin().Element.GetStaticPad("flvsrc")
 			srcPadmp4 := in.Bin().Element.GetStaticPad("mp4src")
@@ -130,6 +131,7 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 
 			srcPadflv.Link(sinkPadrtmp)
 			srcPadmp4.Link(sinkPadfile)
+			fmt.Println("####################inside the file and stream bin linking##########################")
 		} else if err = in.Bin().Link(out.Element()); err != nil {
 			return nil, err
 		}
