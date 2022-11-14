@@ -21,14 +21,14 @@ func testTrackCompositeFile(t *testing.T, conf *TestConfig) {
 			filename:   "tc_{publisher_identity}_vp8_{time}.mp4",
 			//sessionTimeout: time.Second * 25,
 		},
-		{
-			name:       "tc-h264-mp4",
-			fileType:   livekit.EncodedFileType_MP4,
-			audioCodec: params.MimeTypeOpus,
-			videoCodec: params.MimeTypeH264,
-			filename:   "tc_{room_name}_h264_{time}.mp4",
-			//sessionTimeout: time.Second * 25,
-		},
+		// {
+		// 	name:       "tc-h264-mp4",
+		// 	fileType:   livekit.EncodedFileType_MP4,
+		// 	audioCodec: params.MimeTypeOpus,
+		// 	videoCodec: params.MimeTypeH264,
+		// 	filename:   "tc_{room_name}_h264_{time}.mp4",
+		// 	//sessionTimeout: time.Second * 25,
+		// },
 		// {
 		// 	name:           "tc-limit",
 		// 	fileType:       livekit.EncodedFileType_MP4,

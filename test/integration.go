@@ -461,7 +461,7 @@ func stopEgress(t *testing.T, conf *TestConfig, egressID string) *livekit.Egress
 
 func checkStoppedEgress(t *testing.T, conf *TestConfig, egressID string, expectedStatus livekit.EgressStatus) *livekit.EgressInfo {
 	// check ending update
-	checkUpdate(t, conf.updates, egressID, livekit.EgressStatus_EGRESS_ENDING)
+	//checkUpdate(t, conf.updates, egressID, livekit.EgressStatus_EGRESS_ENDING)
 
 	// get final info
 	info := checkUpdate(t, conf.updates, egressID, expectedStatus)
