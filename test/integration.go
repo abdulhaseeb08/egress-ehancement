@@ -90,25 +90,25 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 	}
 
 	// run tests
-	if conf.runRoomTests {
-		if conf.runFileTests {
-			t.Run("RoomComposite/File", func(t *testing.T) {
-				testRoomCompositeFile(t, conf)
-			})
-		}
+	// if conf.runRoomTests {
+	// 	if conf.runFileTests {
+	// 		t.Run("RoomComposite/File", func(t *testing.T) {
+	// 			testRoomCompositeFile(t, conf)
+	// 		})
+	// 	}
 
-		if conf.runStreamTests {
-			t.Run("RoomComposite/Stream", func(t *testing.T) {
-				testRoomCompositeStream(t, conf)
-			})
-		}
+	// 	if conf.runStreamTests {
+	// 		t.Run("RoomComposite/Stream", func(t *testing.T) {
+	// 			testRoomCompositeStream(t, conf)
+	// 		})
+	// 	}
 
-		if conf.runSegmentTests {
-			t.Run("RoomComposite/Segments", func(t *testing.T) {
-				testRoomCompositeSegments(t, conf)
-			})
-		}
-	}
+	// 	if conf.runSegmentTests {
+	// 		t.Run("RoomComposite/Segments", func(t *testing.T) {
+	// 			testRoomCompositeSegments(t, conf)
+	// 		})
+	// 	}
+	// }
 
 	if conf.runTrackCompositeTests {
 		// if conf.runFileTests {
@@ -132,44 +132,43 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 		if conf.runFileAndStreamTests {
 			t.Run("TrackComposite/FileAndStream", func(t *testing.T) {
 				testTrackCompositeFileAndStream(t, conf)
-
 			})
 		}
 	}
 
-	if conf.runTrackTests {
-		if conf.runFileTests {
-			t.Run("Track/File", func(t *testing.T) {
-				testTrackFile(t, conf)
-			})
-		}
+	// if conf.runTrackTests {
+	// 	if conf.runFileTests {
+	// 		t.Run("Track/File", func(t *testing.T) {
+	// 			testTrackFile(t, conf)
+	// 		})
+	// 	}
 
-		if conf.runStreamTests {
-			t.Run("Track/Stream", func(t *testing.T) {
-				testTrackStream(t, conf)
-			})
-		}
-	}
+	// 	if conf.runStreamTests {
+	// 		t.Run("Track/Stream", func(t *testing.T) {
+	// 			testTrackStream(t, conf)
+	// 		})
+	// 	}
+	// }
 
-	if conf.runWebTests {
-		if conf.runFileTests {
-			t.Run("Web/File", func(t *testing.T) {
-				testWebFile(t, conf)
-			})
-		}
+	// if conf.runWebTests {
+	// 	if conf.runFileTests {
+	// 		t.Run("Web/File", func(t *testing.T) {
+	// 			testWebFile(t, conf)
+	// 		})
+	// 	}
 
-		if conf.runStreamTests {
-			t.Run("Web/Stream", func(t *testing.T) {
-				testWebStream(t, conf)
-			})
-		}
+	// 	if conf.runStreamTests {
+	// 		t.Run("Web/Stream", func(t *testing.T) {
+	// 			testWebStream(t, conf)
+	// 		})
+	// 	}
 
-		if conf.runSegmentTests {
-			t.Run("Web/Segments", func(t *testing.T) {
-				testWebSegments(t, conf)
-			})
-		}
-	}
+	// 	if conf.runSegmentTests {
+	// 		t.Run("Web/Segments", func(t *testing.T) {
+	// 			testWebSegments(t, conf)
+	// 		})
+	// 	}
+	// }
 }
 
 func awaitIdle(t *testing.T, svc *service.Service) {
@@ -215,10 +214,7 @@ func runFileTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest
 	verifyFile(t, conf, p, res)
 }
 
-func runStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) 
-	
-	
-	
+func runStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) {
 	conf.SessionLimits.StreamOutputMaxDuration = sessionTimeout
 
 	if conf.SessionLimits.StreamOutputMaxDuration > 0 {
@@ -228,14 +224,38 @@ func runStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressReque
 	}
 }
 
-func runFileAndStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, sessionTimeout time.Duration) {
-	conf.SessionLimits.StreamOutputMaxDuration = sessionTimeout
+func runFileAndStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest, test *testCase) {
+	conf.SessionLimits.FileAndStreamOutputMaxDuration = test.sessionTimeout
+	fmt.Println("test.sessionTimeout is: ")
+	fmt.Println(conf.SessionLimits.FileOutputMaxDuration)
 
-	if conf.SessionLimits.StreamOutputMaxDuration > 0 {
-		runTimeLimitStreamTest(t, conf, req)
-	} else {
-		runMultipleStreamTest(t, conf, req)
+	// start
+	egressID := startEgress(t, conf, req)
+
+	time.Sleep(time.Second * 25)
+	var res *livekit.EgressInfo
+	// if conf.SessionLimits.FileAndStreamOutputMaxDuration > 0 {
+	// 	time.Sleep(conf.SessionLimits.FileOutputMaxDuration + time.Second*3)
+
+	// 	res = checkStoppedEgress(t, conf, egressID, livekit.EgressStatus_EGRESS_LIMIT_REACHED)
+	// } else {
+	p, err := params.GetPipelineParams(context.Background(), conf.Config, req)
+	require.NoError(t, err)
+	verifyStreams(t, p, streamUrl2)
+
+	// stop
+	res = stopEgress(t, conf, egressID)
+	// }
+
+	// get params
+	pF, errF := params.GetPipelineParams(context.Background(), conf.Config, req)
+	require.NoError(t, errF)
+	if p.OutputType == "" {
+		p.OutputType = test.outputType
 	}
+
+	// verify
+	verifyFile(t, conf, pF, res)
 }
 
 func runTimeLimitStreamTest(t *testing.T, conf *TestConfig, req *livekit.StartEgressRequest) {
