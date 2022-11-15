@@ -71,6 +71,7 @@ type segmentUpdate struct {
 }
 
 func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline, error) {
+	fmt.Println("Inside the pipeline New function")
 	ctx, span := tracer.Start(ctx, "Pipeline.New")
 	defer span.End()
 
@@ -87,42 +88,52 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Input bin created, no error")
 
 	// create output bin
 	out, err := output.New(ctx, p)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Output bin created, no error")
 
 	// create pipeline
 	pipeline, err := gst.NewPipeline("pipeline")
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Pipeline created, no error")
 
 	// add bins to pipeline
 	if err = pipeline.Add(in.Element()); err != nil {
 		return nil, err
 	}
+	fmt.Println("Bins added to pipeline, no error")
 
 	// link input elements
 	if err = in.Link(); err != nil {
 		return nil, err
 	}
+	fmt.Println("Input element linked, no error")
 
 	// link output elements. There is no "out" for HLS
 	if out != nil {
+		fmt.Println("inside the if out != nil, no error")
 		if err = pipeline.Add(out.Element()); err != nil {
 			return nil, err
 		}
+		fmt.Println("Add output bin to pipeline, no error")
 
 		if err = out.Link(); err != nil {
 			return nil, err
 		}
+		fmt.Println("Link output bin elemets, no error")
 
+		fmt.Println("My type is: ", p.EgressType)
 		//in case of file and stream output we have two source ghost pads
 		//that we need to connect with the two sink ghost pads
 		if p.EgressType == params.EgressTypeFileAndStream {
+			fmt.Println("Inside linking the ghost pads for file and stream")
 			srcPadflv := in.Bin().Element.GetStaticPad("flvsrc")
 			srcPadmp4 := in.Bin().Element.GetStaticPad("mp4src")
 			sinkPadrtmp := out.Element().GetStaticPad("rtmpsink")
@@ -130,6 +141,7 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 
 			srcPadflv.Link(sinkPadrtmp)
 			srcPadmp4.Link(sinkPadfile)
+			fmt.Println("Linkedd lessgo moving on")
 		} else if err = in.Bin().Link(out.Element()); err != nil {
 			return nil, err
 		}

@@ -102,14 +102,19 @@ func (h *Handler) buildPipeline(ctx context.Context, req *livekit.StartEgressReq
 
 	// build/verify params
 	pipelineParams, err := params.GetPipelineParams(ctx, h.conf, req)
+	fmt.Println("The err after GetPipelineParams is : ", err)
 	var p *pipeline.Pipeline
 
 	if err == nil {
 		// create the pipeline
+		fmt.Println("going to call pipeline checkkk:", err)
 		p, err = pipeline.New(ctx, h.conf, pipelineParams)
+		fmt.Println("the err after calling the pipeline is :( : ", err)
 	}
 
 	if err != nil {
+		fmt.Println("The error was not nil in handler")
+		fmt.Println()
 		info := pipelineParams.Info
 		info.Error = err.Error()
 		info.Status = livekit.EgressStatus_EGRESS_FAILED

@@ -62,6 +62,8 @@ func NewSDKInput(ctx context.Context, p *params.Params, audioSrc, videoSrc *app.
 		bin: gst.NewBin("input"),
 	}
 
+	fmt.Println("Inside the NewSDKInput")
+
 	if p.AudioEnabled {
 		audio, err := NewSDKAudioInput(p, audioSrc, audioCodec)
 		if err != nil {
@@ -140,6 +142,7 @@ func (b *InputBin) build(ctx context.Context, p *params.Params) error {
 	if len(b.mux) == 2 {
 		ghostPadflv = gst.NewGhostPad("flvsrc", b.mux[0].GetStaticPad("src"))
 		ghostPadmp4 = gst.NewGhostPad("mp4src", b.mux[1].GetStaticPad("src"))
+		fmt.Println("length of mux was 2 so made the ghost pads")
 	} else if b.mux != nil {
 		ghostPad = gst.NewGhostPad("src", b.mux[0].GetStaticPad("src"))
 	} else if b.audio != nil {
@@ -150,12 +153,24 @@ func (b *InputBin) build(ctx context.Context, p *params.Params) error {
 		ghostPad = gst.NewGhostPad("src", b.multiQueue.GetStaticPad("src_0"))
 	}
 
+	fmt.Println("Normal ghost pad should be nil: ", ghostPad)
+	fmt.Println("Ghost Pad FLV: ", ghostPadflv)
+	fmt.Println("Ghost Pad MP4: ", ghostPadmp4)
+
 	// adding a new if statement for our file and stream type
-	if ghostPadflv != nil && ghostPadmp4 != nil && !b.bin.AddPad(ghostPadflv.Pad) && !b.bin.AddPad(ghostPadmp4.Pad) {
-		return errors.ErrGhostPadFailed
-	} else if ghostPad == nil || !b.bin.AddPad(ghostPad.Pad) {
+	if ghostPadflv == nil || !b.bin.AddPad(ghostPadflv.Pad) {
+		fmt.Println("First if: flvpad false ")
 		return errors.ErrGhostPadFailed
 	}
+	if ghostPadmp4 == nil || !b.bin.AddPad(ghostPadmp4.Pad) {
+		fmt.Println("Second if: mp4pad false ")
+		return errors.ErrGhostPadFailed
+	}
+	// else if ghostPad == nil || !b.bin.AddPad(ghostPad.Pad) {
+	// 	fmt.Println("Third if: normalpad false ")
+	// 	return errors.ErrGhostPadFailed
+	// }
+	fmt.Println("Yay error was nil so returning nil, ghost pads added sucessfully")
 
 	return nil
 }

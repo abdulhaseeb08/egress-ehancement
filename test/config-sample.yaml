@@ -10,8 +10,9 @@ room_only: false
 web_only: false
 track_composite_only: true
 track_only: false
-file_only: true
+file_only: false
 stream_only: false
 segments_only: false
+file_and_stream_only: true
 muting: false
 insecure: true

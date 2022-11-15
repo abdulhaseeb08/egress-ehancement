@@ -320,11 +320,12 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 			}
 
 		case *livekit.TrackCompositeEgressRequest_FileAndStream: // adding our new output case statement
-			p.DisableManifest = o.FileAndStream.DisableManifest
-			if o.FileAndStream.FileType != livekit.EncodedFileType_DEFAULT_FILETYPE {
-				p.updateOutputType(o.FileAndStream.FileType)
-			}
+			// p.DisableManifest = o.FileAndStream.DisableManifest
+			// if o.FileAndStream.FileType != livekit.EncodedFileType_DEFAULT_FILETYPE {
+			// 	p.updateOutputType(o.FileAndStream.FileType)
+			// }
 			if err = p.updateFileAndStreamParams(OutputTypeRTMP, o.FileAndStream.Urls, o.FileAndStream.Filepath, o.FileAndStream.Output); err != nil {
+				fmt.Println("Error was not nil in getPipelineParams after return from updateFileAndStreamParams")
 				return
 			}
 
@@ -610,6 +611,7 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 //TODO: have to update this function after changing the protobuf filesss
 //Update: Done
 func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string, storageFilepath string, output interface{}) error {
+	fmt.Println("Inside updateFileAndStream")
 	p.EgressType = EgressTypeFileAndStream
 	p.StorageFilepathFS = storageFilepath
 	p.FileInfoFS = &livekit.FileAndStreamInfo{}
@@ -639,18 +641,17 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 		"{room_id}":   p.Info.RoomId,
 		"{time}":      time.Now().Format("2006-01-02T150405"),
 	}
-	if p.OutputType != "" {
-		err := p.updateFilepath(p.Info.RoomName, replacements)
-		if err != nil {
-			return err
-		}
-	} else {
-		p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
-	}
+	// if p.OutputType != "" {
+	// 	err := p.updateFilepath(p.Info.RoomName, replacements)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// } else {
+	p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
+	// }
 
 	p.OutputType = outputType
 
-	p.EgressType = EgressTypeStream
 	p.AudioCodec = MimeTypeAAC
 	p.VideoCodec = MimeTypeH264
 	p.StreamUrls = urls

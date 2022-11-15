@@ -31,6 +31,7 @@ type TestConfig struct {
 	FileTestsOnly           bool   `yaml:"file_only"`
 	StreamTestsOnly         bool   `yaml:"stream_only"`
 	SegmentTestsOnly        bool   `yaml:"segments_only"`
+	FileAndStreamTestsOnly  bool   `yaml:"file_and_stream_only`
 	Muting                  bool   `yaml:"muting"`
 	GstDebug                int    `yaml:"gst_debug"`
 
@@ -87,9 +88,11 @@ func NewTestContext(t *testing.T) *TestConfig {
 	tc.runTrackCompositeTests = !tc.RoomTestsOnly && !tc.ParticipantTestsOnly && !tc.TrackTestsOnly && !tc.WebTestsOnly
 	tc.runTrackTests = !tc.RoomTestsOnly && !tc.ParticipantTestsOnly && !tc.TrackCompositeTestsOnly && !tc.WebTestsOnly
 	tc.runWebTests = !tc.RoomTestsOnly && !tc.ParticipantTestsOnly && !tc.TrackCompositeTestsOnly && !tc.TrackTestsOnly
-	tc.runFileTests = !tc.StreamTestsOnly && !tc.SegmentTestsOnly
-	tc.runStreamTests = !tc.FileTestsOnly && !tc.SegmentTestsOnly
-	tc.runSegmentTests = !tc.FileTestsOnly && !tc.StreamTestsOnly
+	// changing the next four lines to incorporate our new file and stream output
+	tc.runFileTests = !tc.StreamTestsOnly && !tc.SegmentTestsOnly && !tc.FileAndStreamTestsOnly
+	tc.runStreamTests = !tc.FileTestsOnly && !tc.SegmentTestsOnly && !tc.FileAndStreamTestsOnly
+	tc.runSegmentTests = !tc.FileTestsOnly && !tc.StreamTestsOnly && !tc.FileAndStreamTestsOnly
+	tc.runFileAndStreamTests = !tc.FileTestsOnly && !tc.StreamTestsOnly && !tc.SegmentTestsOnly
 
 	err = os.Setenv("GST_DEBUG", fmt.Sprint(tc.GstDebug))
 	require.NoError(t, err)
