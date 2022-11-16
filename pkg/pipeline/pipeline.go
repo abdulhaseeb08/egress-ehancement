@@ -309,7 +309,7 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	// adding new case here
 	case params.EgressTypeFileAndStream:
 		var err error
-		p.FileInfoFS.Location, p.FileInfoFS.FileSize, err = p.storeFile(ctx, p.LocalFilepath, p.StorageFilepath, p.OutputType)
+		p.FileInfoFS.Location, p.FileInfoFS.FileSize, err = p.storeFile(ctx, p.LocalFilepathFS, p.StorageFilepathFS, p.OutputType)
 		if err != nil {
 			p.Info.Error = err.Error()
 		}

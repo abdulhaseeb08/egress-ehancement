@@ -23,7 +23,7 @@ import (
 
 const (
 	streamUrl1   = "rtmp://localhost:1935/live/stream1"
-	streamUrl2   = "rtmp://localhost:1935/live/stream2"
+	streamUrl2   = "rtmp://a.rtmp.youtube.com/live2/52ah-1jja-k4mb-7716-8hhp"
 	badStreamUrl = "rtmp://sfo.contribute.live-video.net/app/fake1"
 	webUrl       = "https://www.youtube.com/watch?v=wjQq0nSGS28&t=5205s"
 )
