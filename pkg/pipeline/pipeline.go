@@ -139,6 +139,11 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 			sinkPadrtmp := out.Element().GetStaticPad("rtmpsink")
 			sinkPadfile := out.Element().GetStaticPad("mp4sink")
 
+			fmt.Println("srcPadflv ", srcPadflv)
+			fmt.Println("srcPadmp4 ", srcPadmp4)
+			fmt.Println("sinkPadrtmp ", sinkPadrtmp)
+			fmt.Println("sinkPadfile ", sinkPadfile)
+
 			srcPadflv.Link(sinkPadrtmp)
 			srcPadmp4.Link(sinkPadfile)
 			fmt.Println("Linkedd lessgo moving on")
@@ -233,6 +238,7 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	if err := p.pipeline.SetState(gst.StatePlaying); err != nil {
 		span.RecordError(err)
 		p.Logger.Errorw("failed to set pipeline state", err)
+		fmt.Println("Error after failing to set to playing is : ", err)
 		p.Info.Error = err.Error()
 		return p.Info
 	}
@@ -339,6 +345,7 @@ func (p *Pipeline) messageWatch(msg *gst.Message) bool {
 	case gst.MessageError:
 		// handle error if possible, otherwise close and return
 		err, handled := p.handleError(msg.ParseError())
+		fmt.Println("Watch message error: ", err)
 		if !handled {
 			p.Info.Error = err.Error()
 			p.stop()

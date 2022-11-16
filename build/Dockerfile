@@ -90,5 +90,7 @@ ENV XDG_RUNTIME_DIR=$PATH:~/.cache/xdgr
 COPY --from=0 /workspace/egress /bin/
 COPY build/entrypoint.sh /
 
+
+
 # run
 ENTRYPOINT ["/entrypoint.sh"]

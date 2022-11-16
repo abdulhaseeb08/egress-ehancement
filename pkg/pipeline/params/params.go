@@ -320,10 +320,10 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 			}
 
 		case *livekit.TrackCompositeEgressRequest_FileAndStream: // adding our new output case statement
-			// p.DisableManifest = o.FileAndStream.DisableManifest
-			// if o.FileAndStream.FileType != livekit.EncodedFileType_DEFAULT_FILETYPE {
-			// 	p.updateOutputType(o.FileAndStream.FileType)
-			// }
+			p.DisableManifest = o.FileAndStream.DisableManifest
+			if o.FileAndStream.FileType != livekit.EncodedFileType_DEFAULT_FILETYPE {
+				p.updateOutputType(o.FileAndStream.FileType)
+			}
 			if err = p.updateFileAndStreamParams(OutputTypeRTMP, o.FileAndStream.Urls, o.FileAndStream.Filepath, o.FileAndStream.Output); err != nil {
 				fmt.Println("Error was not nil in getPipelineParams after return from updateFileAndStreamParams")
 				return
@@ -614,6 +614,8 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 	fmt.Println("Inside updateFileAndStream")
 	p.EgressType = EgressTypeFileAndStream
 	p.StorageFilepathFS = storageFilepath
+	p.LocalFilepathFS = p.StorageFilepathFS
+	fmt.Println("Filepath inside update file and stream param is :", p.LocalFilepathFS)
 	p.FileInfoFS = &livekit.FileAndStreamInfo{}
 	//p.Info.Result = &livekit.EgressInfo_FileAndStream{FileAndStream: p.FileInfoFS}
 
@@ -641,14 +643,14 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 		"{room_id}":   p.Info.RoomId,
 		"{time}":      time.Now().Format("2006-01-02T150405"),
 	}
-	// if p.OutputType != "" {
-	// 	err := p.updateFilepath(p.Info.RoomName, replacements)
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// } else {
-	p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
-	// }
+	if p.OutputType != "" {
+		err := p.updateFilepathInFileAndStream(p.Info.RoomName, replacements)
+		if err != nil {
+			return err
+		}
+	} else {
+		p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
+	}
 
 	p.OutputType = outputType
 
@@ -809,6 +811,59 @@ func (p *Params) updateFilepath(identifier string, replacements map[string]strin
 	}
 
 	p.Logger.Debugw("writing to file", "filename", p.LocalFilepath)
+	return nil
+}
+
+func (p *Params) updateFilepathInFileAndStream(identifier string, replacements map[string]string) error {
+	p.StorageFilepathFS = stringReplace(p.StorageFilepathFS, replacements)
+
+	// get file extension
+	ext := FileExtensionForOutputType[p.OutputType]
+
+	if p.StorageFilepathFS == "" || strings.HasSuffix(p.StorageFilepathFS, "/") {
+		// generate filepath
+		p.StorageFilepathFS = fmt.Sprintf("%s%s-%s%s", p.StorageFilepathFS, identifier, time.Now().Format("2006-01-02T150405"), ext)
+	} else if !strings.HasSuffix(p.StorageFilepathFS, string(ext)) {
+		// check for existing (incorrect) extension
+		extIdx := strings.LastIndex(p.StorageFilepathFS, ".")
+		if extIdx > 0 {
+			existingExt := FileExtension(p.StorageFilepathFS[extIdx:])
+			if _, ok := FileExtensions[existingExt]; ok {
+				p.StorageFilepathFS = p.StorageFilepathFS[:extIdx]
+			}
+		}
+		// add file extension
+		p.StorageFilepathFS = p.StorageFilepathFS + string(ext)
+	}
+
+	// update filename
+	p.FileInfoFS.Filename = p.StorageFilepathFS
+
+	// get local filepath
+	dir, filename := path.Split(p.StorageFilepathFS)
+	if p.UploadConfig == nil {
+		if dir != "" {
+			// create local directory
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				return err
+			}
+		}
+		// write directly to requested location
+		p.LocalFilepathFS = p.StorageFilepathFS
+	} else {
+		// prepend the configuration base directory and the egress Id
+		tempDir := path.Join(p.conf.LocalOutputDirectory, p.Info.EgressId)
+
+		// create temporary directory
+		if err := os.MkdirAll(tempDir, 0755); err != nil {
+			return err
+		}
+
+		// write to tmp dir
+		p.LocalFilepathFS = path.Join(tempDir, filename)
+	}
+
+	p.Logger.Debugw("writing to file", "filename", p.LocalFilepathFS)
 	return nil
 }
 
