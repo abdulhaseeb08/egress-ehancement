@@ -19,7 +19,9 @@ func buildFileStreamOutputBin(p *params.Params) (*OutputBin, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = filesink.SetProperty("location", p.LocalFilepath); err != nil {
+	p.LocalFilepathFS = p.StorageFilepathFS
+	fmt.Println("The filepath for our filesink is : ", p.LocalFilepathFS)
+	if err = filesink.SetProperty("location", p.LocalFilepathFS); err != nil {
 		return nil, err
 	}
 	if err = filesink.SetProperty("sync", false); err != nil {

@@ -179,6 +179,7 @@ func testTrackCompositeSegments(t *testing.T, conf *TestConfig) {
 }
 
 func testTrackCompositeFileAndStream(t *testing.T, conf *TestConfig) {
+	//os.Setenv("GST_DEBUG", "*:5")
 	for _, test := range []*testCase{
 		{
 			name:       "tc-vp8-mp4-and-rtmp",

@@ -2,6 +2,9 @@ FROM livekit/gstreamer:1.20.4-dev
 
 WORKDIR /workspace
 
+# setting the GST_DEBUG
+ENV GST_DEBUG=*:5
+
 ARG TARGETPLATFORM
 
 # install deps
