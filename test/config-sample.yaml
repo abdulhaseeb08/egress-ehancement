@@ -1,12 +1,11 @@
 log_level: debug
 gst_debug: 1
-api_key: API7KyKknWj9RVW
-api_secret: 6AKnxnqWWKDXyE8iMM2zffgZYv6Qfm09DuPRVFcHZybB
+api_key: APIHYMqEBWRYk56
+api_secret: QXezAhFLT9BOKDMEOUnAKU3OGFQZowzyrsanbMfmFmY
 ws_url: ws://localhost:7880
 redis:
   address: localhost:6379
-room_name: nov
-local_directory: /out/output
+local_directory: /out/joji
 room_only: false
 web_only: false
 track_composite_only: true
