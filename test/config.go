@@ -31,7 +31,7 @@ type TestConfig struct {
 	FileTestsOnly           bool   `yaml:"file_only"`
 	StreamTestsOnly         bool   `yaml:"stream_only"`
 	SegmentTestsOnly        bool   `yaml:"segments_only"`
-	FileAndStreamTestsOnly  bool   `yaml:"file_and_stream_only`
+	FileAndStreamTestsOnly  bool   `yaml:"file_and_stream_only"`
 	Muting                  bool   `yaml:"muting"`
 	GstDebug                int    `yaml:"gst_debug"`
 

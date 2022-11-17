@@ -89,46 +89,46 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 		require.Len(t, status, 1)
 		require.Contains(t, status, "CpuLoad")
 	}
-
+	fmt.Println("############--conf---################", conf)
 	// run tests
-	// if conf.runRoomTests {
-	// 	if conf.runFileTests {
-	// 		t.Run("RoomComposite/File", func(t *testing.T) {
-	// 			testRoomCompositeFile(t, conf)
-	// 		})
-	// 	}
+	if conf.runRoomTests {
+		if conf.runFileTests {
+			t.Run("RoomComposite/File", func(t *testing.T) {
+				testRoomCompositeFile(t, conf)
+			})
+		}
 
-	// 	if conf.runStreamTests {
-	// 		t.Run("RoomComposite/Stream", func(t *testing.T) {
-	// 			testRoomCompositeStream(t, conf)
-	// 		})
-	// 	}
+		if conf.runStreamTests {
+			t.Run("RoomComposite/Stream", func(t *testing.T) {
+				testRoomCompositeStream(t, conf)
+			})
+		}
 
-	// 	if conf.runSegmentTests {
-	// 		t.Run("RoomComposite/Segments", func(t *testing.T) {
-	// 			testRoomCompositeSegments(t, conf)
-	// 		})
-	// 	}
-	// }
+		if conf.runSegmentTests {
+			t.Run("RoomComposite/Segments", func(t *testing.T) {
+				testRoomCompositeSegments(t, conf)
+			})
+		}
+	}
 
 	if conf.runTrackCompositeTests {
-		// if conf.runFileTests {
-		// 	t.Run("TrackComposite/File", func(t *testing.T) {
-		// 		testTrackCompositeFile(t, conf)
-		// 	})
-		// }
+		if conf.runFileTests {
+			t.Run("TrackComposite/File", func(t *testing.T) {
+				testTrackCompositeFile(t, conf)
+			})
+		}
 
-		// if conf.runStreamTests {
-		// 	t.Run("TrackComposite/Stream", func(t *testing.T) {
-		// 		testTrackCompositeStream(t, conf)
-		// 	})
-		// }
+		if conf.runStreamTests {
+			t.Run("TrackComposite/Stream", func(t *testing.T) {
+				testTrackCompositeStream(t, conf)
+			})
+		}
 
-		// if conf.runSegmentTests {
-		// 	t.Run("TrackComposite/Segments", func(t *testing.T) {
-		// 		testTrackCompositeSegments(t, conf)
-		// 	})
-		// }
+		if conf.runSegmentTests {
+			t.Run("TrackComposite/Segments", func(t *testing.T) {
+				testTrackCompositeSegments(t, conf)
+			})
+		}
 
 		if conf.runFileAndStreamTests {
 			t.Run("TrackComposite/FileAndStream", func(t *testing.T) {
@@ -137,39 +137,39 @@ func RunTestSuite(t *testing.T, conf *TestConfig, rpcClient egress.RPCClient, rp
 		}
 	}
 
-	// if conf.runTrackTests {
-	// 	if conf.runFileTests {
-	// 		t.Run("Track/File", func(t *testing.T) {
-	// 			testTrackFile(t, conf)
-	// 		})
-	// 	}
+	if conf.runTrackTests {
+		if conf.runFileTests {
+			t.Run("Track/File", func(t *testing.T) {
+				testTrackFile(t, conf)
+			})
+		}
 
-	// 	if conf.runStreamTests {
-	// 		t.Run("Track/Stream", func(t *testing.T) {
-	// 			testTrackStream(t, conf)
-	// 		})
-	// 	}
-	// }
+		if conf.runStreamTests {
+			t.Run("Track/Stream", func(t *testing.T) {
+				testTrackStream(t, conf)
+			})
+		}
+	}
 
-	// if conf.runWebTests {
-	// 	if conf.runFileTests {
-	// 		t.Run("Web/File", func(t *testing.T) {
-	// 			testWebFile(t, conf)
-	// 		})
-	// 	}
+	if conf.runWebTests {
+		if conf.runFileTests {
+			t.Run("Web/File", func(t *testing.T) {
+				testWebFile(t, conf)
+			})
+		}
 
-	// 	if conf.runStreamTests {
-	// 		t.Run("Web/Stream", func(t *testing.T) {
-	// 			testWebStream(t, conf)
-	// 		})
-	// 	}
+		if conf.runStreamTests {
+			t.Run("Web/Stream", func(t *testing.T) {
+				testWebStream(t, conf)
+			})
+		}
 
-	// 	if conf.runSegmentTests {
-	// 		t.Run("Web/Segments", func(t *testing.T) {
-	// 			testWebSegments(t, conf)
-	// 		})
-	// 	}
-	// }
+		if conf.runSegmentTests {
+			t.Run("Web/Segments", func(t *testing.T) {
+				testWebSegments(t, conf)
+			})
+		}
+	}
 }
 
 func awaitIdle(t *testing.T, svc *service.Service) {
