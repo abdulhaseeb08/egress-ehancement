@@ -5,14 +5,14 @@ api_secret: QXezAhFLT9BOKDMEOUnAKU3OGFQZowzyrsanbMfmFmY
 ws_url: ws://localhost:7880
 redis:
   address: localhost:6379
-local_directory: /out/musab
+local_directory: /out/haris
 room_only: false
 web_only: false
 track_composite_only: true
 track_only: false
-file_only: false
+file_only: true
 stream_only: false
 segments_only: false
-file_and_stream_only: true
+file_and_stream_only: false
 muting: false
 insecure: true

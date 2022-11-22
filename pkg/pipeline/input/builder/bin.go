@@ -158,18 +158,20 @@ func (b *InputBin) build(ctx context.Context, p *params.Params) error {
 	fmt.Println("Ghost Pad MP4: ", ghostPadmp4)
 
 	// adding a new if statement for our file and stream type
-	if ghostPadflv == nil || !b.bin.AddPad(ghostPadflv.Pad) {
-		fmt.Println("First if: flvpad false ")
+	if p.EgressType == params.EgressTypeFileAndStream {
+		if ghostPadflv == nil || !b.bin.AddPad(ghostPadflv.Pad) {
+			fmt.Println("First if: flvpad false ")
+			return errors.ErrGhostPadFailed
+		}
+		if ghostPadmp4 == nil || !b.bin.AddPad(ghostPadmp4.Pad) {
+			fmt.Println("Second if: mp4pad false ")
+			return errors.ErrGhostPadFailed
+		}
+
+	} else if ghostPad == nil || !b.bin.AddPad(ghostPad.Pad) {
+		fmt.Println("Third if: normalpad false ")
 		return errors.ErrGhostPadFailed
 	}
-	if ghostPadmp4 == nil || !b.bin.AddPad(ghostPadmp4.Pad) {
-		fmt.Println("Second if: mp4pad false ")
-		return errors.ErrGhostPadFailed
-	}
-	// else if ghostPad == nil || !b.bin.AddPad(ghostPad.Pad) {
-	// 	fmt.Println("Third if: normalpad false ")
-	// 	return errors.ErrGhostPadFailed
-	// }
 	fmt.Println("Yay error was nil so returning nil, ghost pads added sucessfully")
 
 	return nil
