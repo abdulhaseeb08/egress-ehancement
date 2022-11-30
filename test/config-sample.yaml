@@ -1,11 +1,11 @@
 log_level: debug
 gst_debug: 1
-api_key: APIHYMqEBWRYk56
-api_secret: QXezAhFLT9BOKDMEOUnAKU3OGFQZowzyrsanbMfmFmY
+api_key: API7KyKknWj9RVW
+api_secret: 6AKnxnqWWKDXyE8iMM2zffgZYv6Qfm09DuPRVFcHZybB
 ws_url: ws://localhost:7880
 redis:
   address: localhost:6379
-local_directory: /out/haris
+local_directory: /out/abdul
 room_only: false
 web_only: false
 track_composite_only: true

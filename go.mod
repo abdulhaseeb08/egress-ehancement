@@ -7,8 +7,8 @@ replace github.com/tinyzimmer/go-gst v0.2.32 => github.com/livekit/go-gst v0.0.0
 require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/Azure/azure-storage-blob-go v0.14.0
-	github.com/abdulhaseeb08/livekit-server v0.0.0-20221111155605-e540405ac14b
-	github.com/abdulhaseeb08/protocol v0.0.0-20221111153142-5c89face69df
+	github.com/abdulhaseeb08/livekit-server v0.0.0-20221130171059-5896f68f1413
+	github.com/abdulhaseeb08/protocol v0.0.0-20221130170037-2116cacd6170
 	github.com/abdulhaseeb08/server-sdk-go v0.0.0-20221111160046-be99769fc513
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible
 	github.com/aws/aws-sdk-go v1.43.3
@@ -23,11 +23,11 @@ require (
 	github.com/livekit/mageutil v0.0.0-20221002073820-d9198083cfdc
 	github.com/pion/rtp v1.7.13
 	github.com/pion/webrtc/v3 v3.1.47
-	github.com/prometheus/client_golang v1.13.0
+	github.com/prometheus/client_golang v1.14.0
 	github.com/stretchr/testify v1.8.1
 	github.com/tinyzimmer/go-glib v0.0.25
 	github.com/tinyzimmer/go-gst v0.2.32
-	github.com/urfave/cli/v2 v2.20.3
+	github.com/urfave/cli/v2 v2.23.4
 	go.uber.org/atomic v1.10.0
 	go.uber.org/zap v1.23.0
 	google.golang.org/api v0.74.0
@@ -94,7 +94,7 @@ require (
 	github.com/pion/udp v0.1.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect
@@ -109,7 +109,7 @@ require (
 	golang.org/x/crypto v0.0.0-20221010152910-d6f0a8c073c2 // indirect
 	golang.org/x/net v0.0.0-20221004154528-8021a29435af // indirect
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5 // indirect
-	golang.org/x/sync v0.0.0-20220929204114-8fcdb60fdcc0 // indirect
+	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.0.0-20221010170243-090e33056c14 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20191024005414-555d28b269f0 // indirect
