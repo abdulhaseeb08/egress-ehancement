@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/config"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/protocol/egress"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/abdulhaseeb08/protocol/tracer"
+	"github.com/carbonteq/egress-ehancement/pkg/config"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/protocol/egress"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/logger"
+	"github.com/carbonteq/protocol/tracer"
 )
 
 type Params struct {

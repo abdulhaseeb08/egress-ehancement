@@ -15,11 +15,11 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/stretchr/testify/require"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/abdulhaseeb08/protocol/utils"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/logger"
+	"github.com/carbonteq/protocol/utils"
 )
 
 func testTrackFile(t *testing.T, conf *TestConfig) {

@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/abdulhaseeb08/protocol/egress"
-	"github.com/abdulhaseeb08/protocol/redis"
+	"github.com/carbonteq/protocol/egress"
+	"github.com/carbonteq/protocol/redis"
 )
 
 func TestEgress(t *testing.T) {

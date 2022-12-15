@@ -13,9 +13,9 @@ import (
 	"github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/protocol/tracer"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/protocol/tracer"
 )
 
 // creates a new pulse audio sink

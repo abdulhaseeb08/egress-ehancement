@@ -13,12 +13,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/service"
-	"github.com/abdulhaseeb08/protocol/egress"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/utils"
-	lksdk "github.com/abdulhaseeb08/server-sdk-go"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/service"
+	"github.com/carbonteq/protocol/egress"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/utils"
+	lksdk "github.com/carbonteq/server-sdk-go"
 )
 
 const (

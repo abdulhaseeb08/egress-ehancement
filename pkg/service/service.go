@@ -19,14 +19,14 @@ import (
 	"google.golang.org/protobuf/proto"
 	"gopkg.in/yaml.v3"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/config"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/stats"
-	"github.com/abdulhaseeb08/egress-ehancement/version"
-	"github.com/abdulhaseeb08/protocol/egress"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/abdulhaseeb08/protocol/tracer"
+	"github.com/carbonteq/egress-ehancement/pkg/config"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/stats"
+	"github.com/carbonteq/egress-ehancement/version"
+	"github.com/carbonteq/protocol/egress"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/logger"
+	"github.com/carbonteq/protocol/tracer"
 )
 
 const shutdownTimer = time.Second * 30

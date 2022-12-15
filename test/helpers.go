@@ -22,11 +22,11 @@ import (
 	"github.com/stretchr/testify/require"
 	"google.golang.org/api/option"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/config"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/logger"
-	lksdk "github.com/abdulhaseeb08/server-sdk-go"
+	"github.com/carbonteq/egress-ehancement/pkg/config"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/logger"
+	lksdk "github.com/carbonteq/server-sdk-go"
 )
 
 const muteDuration = time.Second * 10

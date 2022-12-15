@@ -13,16 +13,16 @@ import (
 	"github.com/tinyzimmer/go-glib/glib"
 	"github.com/tinyzimmer/go-gst/gst"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/config"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/input"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/input/sdk"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/input/web"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/output"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/sink"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/tracer"
+	"github.com/carbonteq/egress-ehancement/pkg/config"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/input"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/input/sdk"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/input/web"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/output"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/sink"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/tracer"
 )
 
 const (

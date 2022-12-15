@@ -5,9 +5,9 @@ import (
 
 	"github.com/tinyzimmer/go-gst/gst"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/protocol/utils"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/protocol/utils"
 )
 
 func buildStreamOutputBin(p *params.Params) (*OutputBin, error) {

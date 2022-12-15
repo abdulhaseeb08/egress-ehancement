@@ -8,8 +8,8 @@ import (
 	"github.com/tinyzimmer/go-gst/gst"
 	"github.com/tinyzimmer/go-gst/gst/app"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
 )
 
 type VideoInput struct {

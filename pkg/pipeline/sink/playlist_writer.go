@@ -10,7 +10,7 @@ import (
 
 	"github.com/grafov/m3u8"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
 )
 
 type PlaylistWriter struct {

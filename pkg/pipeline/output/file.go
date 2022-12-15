@@ -3,8 +3,8 @@ package output
 import (
 	"github.com/tinyzimmer/go-gst/gst"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
 )
 
 func buildFileOutputBin(p *params.Params) (*OutputBin, error) {

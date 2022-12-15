@@ -9,11 +9,11 @@ import (
 	"github.com/tinyzimmer/go-gst/gst/app"
 	"go.uber.org/atomic"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/input/builder"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/abdulhaseeb08/protocol/tracer"
-	lksdk "github.com/abdulhaseeb08/server-sdk-go"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/input/builder"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/protocol/logger"
+	"github.com/carbonteq/protocol/tracer"
+	lksdk "github.com/carbonteq/server-sdk-go"
 )
 
 const (

@@ -14,13 +14,13 @@ import (
 	"github.com/tinyzimmer/go-gst/gst/app"
 	"go.uber.org/atomic"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/pipeline/params"
-	"github.com/abdulhaseeb08/livekit-server/pkg/sfu"
-	"github.com/abdulhaseeb08/livekit-server/pkg/sfu/buffer"
-	"github.com/abdulhaseeb08/protocol/logger"
-	lksdk "github.com/abdulhaseeb08/server-sdk-go"
-	"github.com/abdulhaseeb08/server-sdk-go/pkg/samplebuilder"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/egress-ehancement/pkg/pipeline/params"
+	"github.com/carbonteq/livekit-server/pkg/sfu"
+	"github.com/carbonteq/livekit-server/pkg/sfu/buffer"
+	"github.com/carbonteq/protocol/logger"
+	lksdk "github.com/carbonteq/server-sdk-go"
+	"github.com/carbonteq/server-sdk-go/pkg/samplebuilder"
 )
 
 const (

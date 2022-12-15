@@ -10,12 +10,12 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/yaml.v3"
 
-	"github.com/abdulhaseeb08/egress-ehancement/pkg/errors"
-	"github.com/abdulhaseeb08/protocol/livekit"
-	"github.com/abdulhaseeb08/protocol/logger"
-	"github.com/abdulhaseeb08/protocol/redis"
-	"github.com/abdulhaseeb08/protocol/utils"
-	lksdk "github.com/abdulhaseeb08/server-sdk-go"
+	"github.com/carbonteq/egress-ehancement/pkg/errors"
+	"github.com/carbonteq/protocol/livekit"
+	"github.com/carbonteq/protocol/logger"
+	"github.com/carbonteq/protocol/redis"
+	"github.com/carbonteq/protocol/utils"
+	lksdk "github.com/carbonteq/server-sdk-go"
 )
 
 const (

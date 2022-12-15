@@ -1,4 +1,4 @@
-module github.com/abdulhaseeb08/egress-ehancement
+module github.com/carbonteq/egress-ehancement
 
 go 1.18
 
@@ -7,11 +7,11 @@ replace github.com/tinyzimmer/go-gst v0.2.32 => github.com/livekit/go-gst v0.0.0
 require (
 	cloud.google.com/go/storage v1.22.1
 	github.com/Azure/azure-storage-blob-go v0.14.0
-	github.com/abdulhaseeb08/livekit-server v0.0.0-20221130171059-5896f68f1413
-	github.com/abdulhaseeb08/protocol v0.0.0-20221130170037-2116cacd6170
-	github.com/abdulhaseeb08/server-sdk-go v0.0.0-20221111160046-be99769fc513
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.4+incompatible
 	github.com/aws/aws-sdk-go v1.43.3
+	github.com/carbonteq/livekit-server v0.0.0-20221215120306-4f7dcbec3896
+	github.com/carbonteq/protocol v0.0.0-20221215115759-5468f4df4986
+	github.com/carbonteq/server-sdk-go v0.0.0-20221215120722-f09c75daefe6
 	github.com/chromedp/cdproto v0.0.0-20220208224320-6efb837e6bc2
 	github.com/chromedp/chromedp v0.7.7
 	github.com/frostbyte73/go-throttle v0.0.0-20210621200530-8018c891361d
