@@ -71,7 +71,6 @@ type segmentUpdate struct {
 }
 
 func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline, error) {
-	fmt.Println("Inside the pipeline New function")
 	ctx, span := tracer.Start(ctx, "Pipeline.New")
 	defer span.End()
 
@@ -88,65 +87,48 @@ func New(ctx context.Context, conf *config.Config, p *params.Params) (*Pipeline,
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Input bin created, no error")
 
 	// create output bin
 	out, err := output.New(ctx, p)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Output bin created, no error")
 
 	// create pipeline
 	pipeline, err := gst.NewPipeline("pipeline")
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Pipeline created, no error")
 
 	// add bins to pipeline
 	if err = pipeline.Add(in.Element()); err != nil {
 		return nil, err
 	}
-	fmt.Println("Bins added to pipeline, no error")
 
 	// link input elements
 	if err = in.Link(); err != nil {
 		return nil, err
 	}
-	fmt.Println("Input element linked, no error")
 
 	// link output elements. There is no "out" for HLS
 	if out != nil {
-		fmt.Println("inside the if out != nil, no error")
 		if err = pipeline.Add(out.Element()); err != nil {
 			return nil, err
 		}
-		fmt.Println("Add output bin to pipeline, no error")
 
 		if err = out.Link(); err != nil {
 			return nil, err
 		}
-		fmt.Println("Link output bin elemets, no error")
-
-		fmt.Println("My type is: ", p.EgressType)
 		//in case of file and stream output we have two source ghost pads
 		//that we need to connect with the two sink ghost pads
 		if p.EgressType == params.EgressTypeFileAndStream {
-			fmt.Println("Inside linking the ghost pads for file and stream")
 			srcPadflv := in.Bin().Element.GetStaticPad("flvsrc")
 			srcPadmp4 := in.Bin().Element.GetStaticPad("mp4src")
 			sinkPadrtmp := out.Element().GetStaticPad("rtmpsink")
 			sinkPadfile := out.Element().GetStaticPad("mp4sink")
 
-			fmt.Println("srcPadflv ", srcPadflv)
-			fmt.Println("srcPadmp4 ", srcPadmp4)
-			fmt.Println("sinkPadrtmp ", sinkPadrtmp)
-			fmt.Println("sinkPadfile ", sinkPadfile)
-
 			srcPadflv.Link(sinkPadrtmp)
 			srcPadmp4.Link(sinkPadfile)
-			fmt.Println("Linkedd lessgo moving on")
 		} else if err = in.Bin().Link(out.Element()); err != nil {
 			return nil, err
 		}
@@ -179,7 +161,6 @@ func (p *Pipeline) OnStatusUpdate(f func(context.Context, *livekit.EgressInfo)) 
 }
 
 func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
-	fmt.Println("Pipeline run called")
 	ctx, span := tracer.Start(ctx, "Pipeline.Run")
 	defer span.End()
 
@@ -204,9 +185,7 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 
 	// wait until room is ready
 	start := p.in.StartRecording()
-	fmt.Println("Start recording")
 	if start != nil {
-		fmt.Println("Start was not nil")
 		select {
 		case <-p.closed:
 			p.in.Close()
@@ -220,25 +199,20 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	// close when room ends
 	go func() {
 		<-p.in.EndRecording()
-		fmt.Println("End recording sending EOS")
 		p.SendEOS(ctx)
 	}()
 
 	// session limit timer
-	fmt.Println("Start session limit timer")
 	p.startSessionLimitTimer(ctx) // sends EOS signal after the max allowed time is reached
 
 	// add watch
-	fmt.Println("Adding watch")
 	p.loop = glib.NewMainLoop(glib.MainContextDefault(), false)
 	p.pipeline.GetPipelineBus().AddWatch(p.messageWatch)
 
-	fmt.Println("Setting pipeline state to playing")
 	// set state to playing (this does not start the pipeline)
 	if err := p.pipeline.SetState(gst.StatePlaying); err != nil {
 		span.RecordError(err)
 		p.Logger.Errorw("failed to set pipeline state", err)
-		fmt.Println("Error after failing to set to playing is : ", err)
 		p.Info.Error = err.Error()
 		return p.Info
 	}
@@ -249,13 +223,9 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 	}
 
 	// run main loop
-	fmt.Println("Run main loop")
 	p.loop.Run()
 
 	// close input source
-	fmt.Println("Close input source")
-	fmt.Println("Printing Egress Info")
-	fmt.Println(p.Info)
 	p.in.Close()
 
 	// update endedAt from sdk source
@@ -321,8 +291,6 @@ func (p *Pipeline) Run(ctx context.Context) *livekit.EgressInfo {
 		}
 	}
 
-	fmt.Println("returning info")
-	fmt.Println(p.Info)
 	return p.Info
 }
 
@@ -345,7 +313,6 @@ func (p *Pipeline) messageWatch(msg *gst.Message) bool {
 	case gst.MessageError:
 		// handle error if possible, otherwise close and return
 		err, handled := p.handleError(msg.ParseError())
-		fmt.Println("Watch message error: ", err)
 		if !handled {
 			p.Info.Error = err.Error()
 			p.stop()
@@ -546,11 +513,8 @@ func (p *Pipeline) close(ctx context.Context) {
 }
 
 func (p *Pipeline) startSessionLimitTimer(ctx context.Context) {
-	fmt.Println("Inside start session limit timer")
 	if timeout := p.GetSessionTimeout(); timeout > 0 {
-		fmt.Println("timeout is : ", timeout)
 		p.limitTimer = time.AfterFunc(timeout, func() {
-			fmt.Println("calling the AfterFunc in its own goRoutine, Limit Reached")
 			p.SendEOS(ctx)
 			p.Info.Status = livekit.EgressStatus_EGRESS_LIMIT_REACHED
 		})
@@ -688,22 +652,21 @@ func (p *Pipeline) storeFile(ctx context.Context, localFilepath, storageFilepath
 	}
 
 	var location string
+
 	switch u := p.UploadConfig.(type) {
+
 	case *livekit.S3Upload:
 		location = "S3"
 		p.Logger.Debugw("uploading to s3")
 		destinationUrl, err = sink.UploadS3(u, localFilepath, storageFilepath, mime)
-
 	case *livekit.GCPUpload:
 		location = "GCP"
 		p.Logger.Debugw("uploading to gcp")
 		destinationUrl, err = sink.UploadGCP(u, localFilepath, storageFilepath)
-
 	case *livekit.AzureBlobUpload:
 		location = "Azure"
 		p.Logger.Debugw("uploading to azure")
 		destinationUrl, err = sink.UploadAzure(u, localFilepath, storageFilepath, mime)
-
 	case *livekit.AliOSSUpload:
 		location = "AliOSS"
 		p.Logger.Debugw("uploading to alioss")
@@ -711,6 +674,7 @@ func (p *Pipeline) storeFile(ctx context.Context, localFilepath, storageFilepath
 
 	default:
 		destinationUrl = storageFilepath
+
 	}
 
 	if err != nil {

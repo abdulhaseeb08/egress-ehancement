@@ -325,7 +325,7 @@ func getPipelineParams(conf *config.Config, request *livekit.StartEgressRequest)
 				p.updateOutputType(o.FileAndStream.FileType)
 			}
 			if err = p.updateFileAndStreamParams(OutputTypeRTMP, o.FileAndStream.Urls, o.FileAndStream.Filepath, o.FileAndStream.Output); err != nil {
-				fmt.Println("Error was not nil in getPipelineParams after return from updateFileAndStreamParams")
+
 				return
 			}
 
@@ -528,6 +528,7 @@ func (p *Params) updateFileParams(storageFilepath string, output interface{}) er
 
 	// filename
 	identifier, replacements := p.getFilenameInfo()
+
 	if p.OutputType != "" {
 		err := p.updateFilepath(identifier, replacements)
 		if err != nil {
@@ -608,25 +609,24 @@ func (p *Params) updateSegmentsParams(filePrefix string, playlistFilename string
 	return nil
 }
 
-//TODO: have to update this function after changing the protobuf filesss
-//Update: Done
+// TODO: have to update this function after changing the protobuf filesss
+// Update: Done
 func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string, storageFilepath string, output interface{}) error {
-	fmt.Println("Inside updateFileAndStream")
 	p.EgressType = EgressTypeFileAndStream
 	p.StorageFilepathFS = storageFilepath
-	p.LocalFilepathFS = p.StorageFilepathFS
-	fmt.Println("Filepath inside update file and stream param is :", p.LocalFilepathFS)
 	p.FileInfoFS = &livekit.FileAndStreamInfo{}
 	//p.Info.Result = &livekit.EgressInfo_FileAndStream{FileAndStream: p.FileInfoFS}
 
 	// output location
 	switch o := output.(type) {
-	case *livekit.EncodedFileOutput_S3:
+	case *livekit.FileAndStreamOutput_S3:
 		p.UploadConfig = o.S3
-	case *livekit.EncodedFileOutput_Azure:
+	case *livekit.FileAndStreamOutput_Azure:
 		p.UploadConfig = o.Azure
-	case *livekit.EncodedFileOutput_Gcp:
+	case *livekit.FileAndStreamOutput_Gcp:
 		p.UploadConfig = o.Gcp
+	case *livekit.FileAndStreamOutput_AliOSS:
+		p.UploadConfig = o.AliOSS
 	case *livekit.DirectFileOutput_S3:
 		p.UploadConfig = o.S3
 	case *livekit.DirectFileOutput_Azure:
@@ -643,6 +643,7 @@ func (p *Params) updateFileAndStreamParams(outputType OutputType, urls []string,
 		"{room_id}":   p.Info.RoomId,
 		"{time}":      time.Now().Format("2006-01-02T150405"),
 	}
+
 	if p.OutputType != "" {
 		err := p.updateFilepathInFileAndStream(p.Info.RoomName, replacements)
 		if err != nil {
